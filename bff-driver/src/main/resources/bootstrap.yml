@@ -1,0 +1,79 @@
+server:
+  jetty:
+    threads:
+      acceptors: 4
+      selectors: 8
+  port: 8101
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    include: common
+  application:
+    name: bff-driver
+  redis:
+    database: 3
+    host: 192.168.212.144
+    port: 6379
+    password: 123456
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: -1ms
+        max-idle: 16
+        min-idle: 8
+  cloud:
+    inetutils:
+      preferred-networks: 192.168.2.100
+    nacos:
+      #配置子系统在Web管理页面上的注册信息
+      config:
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        server-addr: 192.168.212.144:8848
+        prefix: ${spring.application.name}
+        namespace: 1366e61f-6ad9-4fe9-965b-4bbbf11dcde7
+      #配置子系统在Nacos上的注册信息
+      discovery:
+        namespace: 1366e61f-6ad9-4fe9-965b-4bbbf11dcde7
+        username: nacos
+        password: nacos
+        server-addr: 192.168.212.144:8848
+        heart-beat-interval: 1000
+        heart-beat-timeout: 1000
+        group: DEFAULT_GROUP
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+sa-token:
+  token-name: token     # HTTP请求头中token的名称
+  timeout: 864000       # token有效期，单位s 默认30天, -1代表永不过期
+  activity-timeout: -1  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  allow-concurrent-login: true   # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-share: false       # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  token-style: uuid     # token风格
+  isReadCookie: false   #读取Cookie中Token
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /doc-api.html
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: on
+
+tx-lcn:
+  client:
+    #连接TM节点
+    manager-address: 127.0.0.1:8070
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 300000

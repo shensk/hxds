@@ -1,0 +1,65 @@
+server:
+  jetty:
+    threads:
+      acceptors: 4
+      selectors: 8
+  port: 8004
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    include: common
+  application:
+    name: hxds-mps
+
+  redis:
+    database: 7
+    host: 192.168.212.144
+    port: 6379
+    password: 123456
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: -1ms
+        max-idle: 16
+        min-idle: 8
+  cloud:
+    inetutils:
+      preferred-networks: 192.168.2.100         #子系统注册到Nacos上的IP地址
+    nacos:
+      #配置子系统在Web管理页面上的注册信息
+      config:
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        server-addr: 192.168.212.144:8848
+        prefix: ${spring.application.name}
+        namespace: 1366e61f-6ad9-4fe9-965b-4bbbf11dcde7
+      #配置子系统在Nacos上的注册信息
+      discovery:
+        namespace: 1366e61f-6ad9-4fe9-965b-4bbbf11dcde7
+        username: nacos
+        password: nacos
+        server-addr: 192.168.212.144:8848
+        heart-beat-interval: 1000
+        heart-beat-timeout: 1000
+        group: DEFAULT_GROUP
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+springdoc:
+  api-docs:
+    enabled: true
+    path: /doc-api.html
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: on
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 300000
