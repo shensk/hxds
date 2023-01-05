@@ -31,7 +31,10 @@ spring:
         group: DEFAULT_GROUP
     sentinel:
       transport:
-        dashboard: 192.168.212.144:8718
+        dashboard: 192.168.212.144:8858
+        port: 8719
+        clientIp: 192.168.2.100
+      enabled: true
     gateway:
       discovery:
         locator:

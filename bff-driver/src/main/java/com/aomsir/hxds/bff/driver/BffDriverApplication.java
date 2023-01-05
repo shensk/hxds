@@ -23,7 +23,6 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan("com.aomsir.*")
 @EnableDistributedTransaction
 public class BffDriverApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(BffDriverApplication.class, args);
     }
