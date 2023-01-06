@@ -1,7 +1,9 @@
 package com.aomsir.hxds.bff.driver.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import com.aomsir.hxds.bff.driver.controller.form.RegisterNewDriverForm;
+import com.aomsir.hxds.bff.driver.controller.form.UpdateDriverAuthForm;
 import com.aomsir.hxds.bff.driver.service.DriverService;
 import com.aomsir.hxds.common.util.R;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,5 +32,16 @@ public class DriverController {
         String token = StpUtil.getTokenInfo().getTokenValue();    //生成Token令牌字符串（已加密）
         return R.ok()
                 .put("token", token);
+    }
+
+    @PostMapping("/updateDriverAuth")
+    @Operation(summary = "更新实名认证信息")
+    @SaCheckLogin
+    public R updateDriverAuth(@RequestBody @Valid UpdateDriverAuthForm form) {
+        long driverId = StpUtil.getLoginIdAsLong();   // 从SaToken中获取driverId
+        form.setDriverId(driverId);
+        int rows = this.driverService.updateDriverAuth(form);
+        return R.ok()
+                .put("rows", rows);
     }
 }

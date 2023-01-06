@@ -2,6 +2,7 @@ package com.aomsir.hxds.bff.driver.service.impl;
 
 import cn.hutool.core.convert.Convert;
 import com.aomsir.hxds.bff.driver.controller.form.RegisterNewDriverForm;
+import com.aomsir.hxds.bff.driver.controller.form.UpdateDriverAuthForm;
 import com.aomsir.hxds.bff.driver.feign.DrServiceApi;
 import com.aomsir.hxds.bff.driver.service.DriverService;
 import com.aomsir.hxds.common.util.R;
@@ -28,5 +29,15 @@ public class DriverServiceImpl implements DriverService {
         R r = this.drServiceApi.registerNewDriver(form);  // 调用远程方法,获取封装了userID的R对象
         long userId = Convert.toLong(r.get("userId"));
         return userId;
+    }
+
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int updateDriverAuth(UpdateDriverAuthForm form) {
+        R r = this.drServiceApi.updateDriverAuth(form);
+        int rows = Convert.toInt(r.get("rows"));
+        return rows;
     }
 }

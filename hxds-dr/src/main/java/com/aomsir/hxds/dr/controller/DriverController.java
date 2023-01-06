@@ -4,6 +4,7 @@ package com.aomsir.hxds.dr.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.dr.controller.form.RegisterNewDriverForm;
+import com.aomsir.hxds.dr.controller.form.UpdateDriverAuthForm;
 import com.aomsir.hxds.dr.service.DriverService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,5 +31,15 @@ public class DriverController {
         String userId = this.driverService.registerNewDriver(param);
         return R.ok()
                 .put("userId", userId);
+    }
+
+    @PostMapping("/updateDriverAuth")
+    @Operation(summary = "更新实名认证信息")
+    public R updateDriverAuth(@RequestBody @Valid UpdateDriverAuthForm form) {
+        Map param = BeanUtil.beanToMap(form);   // JSON转Map
+        int rows = this.driverService.updateDriverAuth(param);
+
+        return R.ok()
+                .put("rows", rows);
     }
 }
