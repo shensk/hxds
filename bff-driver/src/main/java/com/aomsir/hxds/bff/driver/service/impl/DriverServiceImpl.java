@@ -1,6 +1,8 @@
 package com.aomsir.hxds.bff.driver.service.impl;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.map.MapUtil;
+import com.aomsir.hxds.bff.driver.controller.form.CreateDriverFaceModelForm;
 import com.aomsir.hxds.bff.driver.controller.form.RegisterNewDriverForm;
 import com.aomsir.hxds.bff.driver.controller.form.UpdateDriverAuthForm;
 import com.aomsir.hxds.bff.driver.feign.DrServiceApi;
@@ -39,5 +41,15 @@ public class DriverServiceImpl implements DriverService {
         R r = this.drServiceApi.updateDriverAuth(form);
         int rows = Convert.toInt(r.get("rows"));
         return rows;
+    }
+
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public String createDriverFaceModel(CreateDriverFaceModelForm form) {
+        R r = this.drServiceApi.createDriverFaceModel(form);
+        String result = MapUtil.getStr(r, "result");
+        return result;
     }
 }

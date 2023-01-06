@@ -6,4 +6,6 @@ public interface DriverService {
     public String registerNewDriver(Map param);
 
     public int updateDriverAuth(Map param);
+
+    public String createDriverFaceModel(long driverId, String photo);
 }

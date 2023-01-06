@@ -1,6 +1,7 @@
 package com.aomsir.hxds.dr.service.impl;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.aomsir.hxds.common.exception.HxdsException;
 import com.aomsir.hxds.common.util.MicroAppUtil;
@@ -11,7 +12,12 @@ import com.aomsir.hxds.dr.db.pojo.DriverSettingsEntity;
 import com.aomsir.hxds.dr.db.pojo.WalletEntity;
 import com.aomsir.hxds.dr.service.DriverService;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
+import com.tencentcloudapi.common.Credential;
+import com.tencentcloudapi.iai.v20200303.IaiClient;
+import com.tencentcloudapi.iai.v20200303.models.CreatePersonRequest;
+import com.tencentcloudapi.iai.v20200303.models.CreatePersonResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +29,19 @@ import java.util.Map;
 @Service
 @Slf4j
 public class DriverServiceImpl implements DriverService {
+
+    @Value("${tencent.cloud.secretId}")
+    private String secretId;
+
+    @Value("${tencent.cloud.secretKey}")
+    private String secretKey;
+
+    @Value("${tencent.cloud.face.groupName}")
+    private String groupName;
+
+    @Value("${tencent.cloud.face.region}")
+    private String region;
+
     @Resource
     private MicroAppUtil microAppUtil;
     
@@ -83,5 +102,41 @@ public class DriverServiceImpl implements DriverService {
     public int updateDriverAuth(Map param) {
         int rows = this.driverDao.updateDriverAuth(param);
         return rows;
+    }
+
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public String createDriverFaceModel(long driverId, String photo) {
+        HashMap map = this.driverDao.searchDriverNameAndSex(driverId);
+        String name = MapUtil.getStr(map, "name");
+        String sex = MapUtil.getStr(map, "sex");
+
+        Credential cred = new Credential(this.secretId, this.secretKey);
+        IaiClient client = new IaiClient(cred, this.region);
+        try {
+            CreatePersonRequest request = new CreatePersonRequest();
+            request.setGroupId(this.groupName);
+            request.setPersonId(driverId+"");
+            long gender = sex.equals("男") ? 1L : 2L;
+            request.setGender(gender);
+            request.setQualityControl(4L);
+            request.setUniquePersonControl(4L);
+            request.setPersonName(name);
+            request.setImage(photo);
+            CreatePersonResponse resp = client.CreatePerson(request);
+
+            if (StrUtil.isNotBlank(resp.getFaceId())) {
+                int rows = this.driverDao.updateDriverArchive(driverId);
+                if (rows != 1) {
+                    return "更新司机归档字段失败";
+                }
+            }
+        } catch (Exception e) {
+            log.error("创建腾讯云端司机档案失败", e);
+            return "创建腾讯云端司机档案失败";
+        }
+        return "";   // 返回null,JSON会将值为null的字段抹掉
     }
 }

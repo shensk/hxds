@@ -61,6 +61,22 @@
         WHERE id = #{driverId}
     </update>
 
+    <!--查询司机姓名与性别、活体检测需要-->
+    <select id="searchDriverNameAndSex" parameterType="long" resultType="HashMap">
+        SELECT name,
+               sex
+        FROM tb_driver
+        WHERE id = #{driverId}
+    </select>
+
+    <!--更新司机archive字段-->
+    <update id="updateDriverArchive" parameterType="long">
+        UPDATE tb_driver
+        SET archive=1
+        WHERE id = #{driverId}
+    </update>
+
+
 
 
 
