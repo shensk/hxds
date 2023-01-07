@@ -11,10 +11,7 @@ import com.aomsir.hxds.bff.driver.service.DriverService;
 import com.aomsir.hxds.common.util.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -71,7 +68,7 @@ public class DriverController {
             byte realAuth = Byte.parseByte(MapUtil.getStr(map, "realAuth"));
             boolean archive = MapUtil.getBool(map, "archive");
 
-            StpUtil.login(driverId);
+            StpUtil.login(driverId);   // 生成token并将其存储在redis中
             String token = StpUtil.getTokenInfo().getTokenValue();
 
             return R.ok()
@@ -79,6 +76,15 @@ public class DriverController {
                     .put("realAuth", realAuth)
                     .put("archive", archive);
         }
+        return R.ok();
+    }
+
+
+    @GetMapping("/logout")
+    @Operation(summary = "退出系统")
+    @SaCheckLogin
+    public R logout() {
+        StpUtil.logout();   // 从redis中删除当前token
         return R.ok();
     }
 }
