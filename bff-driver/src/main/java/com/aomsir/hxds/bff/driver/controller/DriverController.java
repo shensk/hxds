@@ -2,7 +2,9 @@ package com.aomsir.hxds.bff.driver.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.map.MapUtil;
 import com.aomsir.hxds.bff.driver.controller.form.CreateDriverFaceModelForm;
+import com.aomsir.hxds.bff.driver.controller.form.LoginForm;
 import com.aomsir.hxds.bff.driver.controller.form.RegisterNewDriverForm;
 import com.aomsir.hxds.bff.driver.controller.form.UpdateDriverAuthForm;
 import com.aomsir.hxds.bff.driver.service.DriverService;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/driver")
@@ -56,5 +59,26 @@ public class DriverController {
         String result = this.driverService.createDriverFaceModel(form);
         return R.ok()
                 .put("result", result);
+    }
+
+
+    @PostMapping("/login")
+    @Operation(summary = "登陆系统")
+    public R login(@RequestBody @Valid LoginForm form) {
+        HashMap map = this.driverService.login(form);
+        if (map != null) {
+            long driverId = MapUtil.getLong(map, "id");
+            byte realAuth = Byte.parseByte(MapUtil.getStr(map, "realAuth"));
+            boolean archive = MapUtil.getBool(map, "archive");
+
+            StpUtil.login(driverId);
+            String token = StpUtil.getTokenInfo().getTokenValue();
+
+            return R.ok()
+                    .put("token", token)
+                    .put("realAuth", realAuth)
+                    .put("archive", archive);
+        }
+        return R.ok();
     }
 }

@@ -113,6 +113,8 @@ public class DriverServiceImpl implements DriverService {
         String name = MapUtil.getStr(map, "name");
         String sex = MapUtil.getStr(map, "sex");
 
+
+        // 创建人脸库进腾讯云
         Credential cred = new Credential(this.secretId, this.secretKey);
         IaiClient client = new IaiClient(cred, this.region);
         try {
@@ -127,6 +129,7 @@ public class DriverServiceImpl implements DriverService {
             request.setImage(photo);
             CreatePersonResponse resp = client.CreatePerson(request);
 
+            // 创建成功的执行逻辑
             if (StrUtil.isNotBlank(resp.getFaceId())) {
                 int rows = this.driverDao.updateDriverArchive(driverId);
                 if (rows != 1) {
@@ -138,5 +141,20 @@ public class DriverServiceImpl implements DriverService {
             return "创建腾讯云端司机档案失败";
         }
         return "";   // 返回null,JSON会将值为null的字段抹掉
+    }
+
+
+    @Override
+    public HashMap login(String code) {
+        String openId = microAppUtil.getOpenId(code);
+        HashMap result = this.driverDao.login(openId);
+
+        // 封装archive
+        if (result != null && result.containsKey("archive")) {
+            int temp = MapUtil.getInt(result, "archive");
+            boolean archive = temp == 1 ? true : false;
+            result.replace("archive", archive);
+        }
+        return result;
     }
 }

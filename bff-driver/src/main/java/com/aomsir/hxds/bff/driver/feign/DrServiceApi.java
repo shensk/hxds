@@ -1,6 +1,7 @@
 package com.aomsir.hxds.bff.driver.feign;
 
 import com.aomsir.hxds.bff.driver.controller.form.CreateDriverFaceModelForm;
+import com.aomsir.hxds.bff.driver.controller.form.LoginForm;
 import com.aomsir.hxds.bff.driver.controller.form.RegisterNewDriverForm;
 import com.aomsir.hxds.bff.driver.controller.form.UpdateDriverAuthForm;
 import com.aomsir.hxds.common.util.R;
@@ -18,4 +19,7 @@ public interface DrServiceApi {
 
     @PostMapping("/driver/createDriverFaceModel")
     public R createDriverFaceModel(CreateDriverFaceModelForm form);
+
+    @PostMapping("/driver/login")
+    public R login(LoginForm form);
 }

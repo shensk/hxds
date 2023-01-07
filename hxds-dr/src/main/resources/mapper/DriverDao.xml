@@ -4,8 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aomsir.hxds.dr.db.dao.DriverDao">
 
+    <!--查看司机是否注册-->
     <select id="hasDriver" parameterType="Map" resultType="long">
-        SELECT COUNT(id) AS ct
+        SELECT COUNT(id)
         FROM tb_driver
         WHERE 1=1
         <if test="openId != null">
@@ -16,6 +17,7 @@
         </if>
     </select>
 
+    <!--注册新司机-->
     <insert id="registerNewDriver" parameterType="Map">
         INSERT INTO tb_driver
         SET open_id = #{openId},
@@ -77,8 +79,14 @@
     </update>
 
 
-
-
+    <!--司机登陆-->
+    <select id="login" parameterType="String" resultType="HashMap">
+        SELECT CAST(id AS CHAR) AS id,
+               real_auth        AS realAuth,
+               archive
+        FROM tb_driver
+        WHERE `status` != 2 AND open_id = #{openId}
+    </select>
 
 
 

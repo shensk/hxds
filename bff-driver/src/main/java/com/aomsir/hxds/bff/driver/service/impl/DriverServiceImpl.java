@@ -3,6 +3,7 @@ package com.aomsir.hxds.bff.driver.service.impl;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import com.aomsir.hxds.bff.driver.controller.form.CreateDriverFaceModelForm;
+import com.aomsir.hxds.bff.driver.controller.form.LoginForm;
 import com.aomsir.hxds.bff.driver.controller.form.RegisterNewDriverForm;
 import com.aomsir.hxds.bff.driver.controller.form.UpdateDriverAuthForm;
 import com.aomsir.hxds.bff.driver.feign.DrServiceApi;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 @Service
 public class DriverServiceImpl implements DriverService {
@@ -51,5 +53,13 @@ public class DriverServiceImpl implements DriverService {
         R r = this.drServiceApi.createDriverFaceModel(form);
         String result = MapUtil.getStr(r, "result");
         return result;
+    }
+
+
+    @Override
+    public HashMap login(LoginForm form) {
+        R r = this.drServiceApi.login(form);
+        HashMap map = (HashMap) r.get("result");
+        return map;
     }
 }

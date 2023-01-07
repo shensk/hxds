@@ -4,6 +4,7 @@ package com.aomsir.hxds.dr.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.dr.controller.form.CreateDriverFaceModelForm;
+import com.aomsir.hxds.dr.controller.form.LoginForm;
 import com.aomsir.hxds.dr.controller.form.RegisterNewDriverForm;
 import com.aomsir.hxds.dr.controller.form.UpdateDriverAuthForm;
 import com.aomsir.hxds.dr.service.DriverService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -50,6 +52,16 @@ public class DriverController {
         String result = this.driverService.createDriverFaceModel(form.getDriverId(), form.getPhoto());
         return R.ok()
                 .put("result", result);
+    }
+
+
+    @PostMapping("/login")
+    @Operation(summary = "登陆系统")
+    public R login(@RequestBody @Valid LoginForm form) {
+
+        // code是bff系统传递过来的临时ID
+        HashMap map = this.driverService.login(form.getCode());
+        return R.ok().put("result", map);
     }
 
 }
