@@ -11,4 +11,6 @@ public interface DriverService {
     public String createDriverFaceModel(long driverId, String photo);
 
     public HashMap login(String code);
+
+    public HashMap searchDriverBaseInfo(long driverId);
 }

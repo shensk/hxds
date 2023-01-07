@@ -2,10 +2,7 @@ package com.aomsir.hxds.bff.driver.service.impl;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
-import com.aomsir.hxds.bff.driver.controller.form.CreateDriverFaceModelForm;
-import com.aomsir.hxds.bff.driver.controller.form.LoginForm;
-import com.aomsir.hxds.bff.driver.controller.form.RegisterNewDriverForm;
-import com.aomsir.hxds.bff.driver.controller.form.UpdateDriverAuthForm;
+import com.aomsir.hxds.bff.driver.controller.form.*;
 import com.aomsir.hxds.bff.driver.feign.DrServiceApi;
 import com.aomsir.hxds.bff.driver.service.DriverService;
 import com.aomsir.hxds.common.util.R;
@@ -59,6 +56,14 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public HashMap login(LoginForm form) {
         R r = this.drServiceApi.login(form);
+        HashMap map = (HashMap) r.get("result");
+        return map;
+    }
+
+
+    @Override
+    public HashMap searchDriverBaseInfo(SearchDriverBaseInfoForm form) {
+        R r = this.drServiceApi.searchDriverBaseInfo(form);
         HashMap map = (HashMap) r.get("result");
         return map;
     }

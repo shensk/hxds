@@ -88,7 +88,25 @@
         WHERE `status` != 2 AND open_id = #{openId}
     </select>
 
-
+    <!--查询司机基本信息-->
+    <select id="searchDriverBaseInfo" parameterType="long" resultType="HashMap">
+        SELECT d.open_id               AS openId,
+               d.`name`,
+               d.nickname,
+               d.sex,
+               d.photo,
+               d.tel,
+               d.email,
+               d.pid,
+               d.real_auth             AS realAuth,
+               d.summary,
+               d.`status`,
+               CAST(w.balance AS CHAR) AS balance,   <!--将余额转变为string,以免丢失精度-->
+               d.create_time           AS createTime
+        FROM tb_driver d
+                 JOIN tb_wallet w ON d.id = w.driver_id
+        WHERE d.id = #{driverId};
+    </select>
 
 
 </mapper>

@@ -3,10 +3,7 @@ package com.aomsir.hxds.dr.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.aomsir.hxds.common.util.R;
-import com.aomsir.hxds.dr.controller.form.CreateDriverFaceModelForm;
-import com.aomsir.hxds.dr.controller.form.LoginForm;
-import com.aomsir.hxds.dr.controller.form.RegisterNewDriverForm;
-import com.aomsir.hxds.dr.controller.form.UpdateDriverAuthForm;
+import com.aomsir.hxds.dr.controller.form.*;
 import com.aomsir.hxds.dr.service.DriverService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -62,6 +59,15 @@ public class DriverController {
         // code是bff系统传递过来的临时ID
         HashMap map = this.driverService.login(form.getCode());
         return R.ok().put("result", map);
+    }
+
+
+    @PostMapping("/searchDriverBaseInfo")
+    @Operation(summary = "查询司机基本信息")
+    public R searchDriverBaseInfo(@RequestBody @Valid SearchDriverBaseInfoForm form) {
+        HashMap result = this.driverService.searchDriverBaseInfo(form.getDriverId());
+        return R.ok()
+                .put("result", result);
     }
 
 }

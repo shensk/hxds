@@ -3,6 +3,7 @@ package com.aomsir.hxds.dr.service.impl;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.aomsir.hxds.common.exception.HxdsException;
 import com.aomsir.hxds.common.util.MicroAppUtil;
 import com.aomsir.hxds.dr.db.dao.DriverDao;
@@ -157,4 +158,15 @@ public class DriverServiceImpl implements DriverService {
         }
         return result;
     }
+
+
+    @Override
+    public HashMap searchDriverBaseInfo(long driverId) {
+        HashMap result = this.driverDao.searchDriverBaseInfo(driverId);
+        JSONObject summary = JSONUtil.parseObj(MapUtil.getStr(result, "summary"));  // 将查询出的json字段转换为对象
+        result.replace("summary", summary);
+        return result;
+    }
+
+
 }

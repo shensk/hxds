@@ -3,10 +3,7 @@ package com.aomsir.hxds.bff.driver.controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.map.MapUtil;
-import com.aomsir.hxds.bff.driver.controller.form.CreateDriverFaceModelForm;
-import com.aomsir.hxds.bff.driver.controller.form.LoginForm;
-import com.aomsir.hxds.bff.driver.controller.form.RegisterNewDriverForm;
-import com.aomsir.hxds.bff.driver.controller.form.UpdateDriverAuthForm;
+import com.aomsir.hxds.bff.driver.controller.form.*;
 import com.aomsir.hxds.bff.driver.service.DriverService;
 import com.aomsir.hxds.common.util.R;
 import io.swagger.v3.oas.annotations.Operation;
@@ -86,5 +83,20 @@ public class DriverController {
     public R logout() {
         StpUtil.logout();   // 从redis中删除当前token
         return R.ok();
+    }
+
+
+    @PostMapping("/searchDriverBaseInfo")
+    @Operation(summary = "查询司机基本信息")
+    @SaCheckLogin
+    public R searchDriverBaseInfo() {
+        long driverId = StpUtil.getLoginIdAsLong();
+        SearchDriverBaseInfoForm form = new SearchDriverBaseInfoForm();
+        form.setDriverId(driverId);
+
+        // 将查回来的map结果封装返回
+        HashMap map = this.driverService.searchDriverBaseInfo(form);
+        return R.ok()
+                .put("result", map);
     }
 }
