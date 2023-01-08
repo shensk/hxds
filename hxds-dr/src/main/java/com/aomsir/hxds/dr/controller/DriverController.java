@@ -4,7 +4,9 @@ package com.aomsir.hxds.dr.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.dr.controller.form.*;
+import com.aomsir.hxds.dr.db.dao.DriverSettingsDao;
 import com.aomsir.hxds.dr.service.DriverService;
+import com.aomsir.hxds.dr.service.DriverSettingsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,10 @@ import java.util.Map;
 public class DriverController {
     @Resource
     private DriverService driverService;
+
+
+    @Resource
+    private DriverSettingsService driverSettingsService;
     
 	@PostMapping("/registerNewDriver")
     @Operation(summary = "新司机注册")
@@ -70,4 +76,11 @@ public class DriverController {
                 .put("result", result);
     }
 
+    @PostMapping("/searchDriverSettings")
+    @Operation(summary = "查询司机的设置")
+    public R searchDriverSettings(@RequestBody @Valid SearchDriverSettingsForm form) {
+        HashMap map = this.driverSettingsService.searchDriverSettings(form.getDriverId());
+        return R.ok()
+                .put("result", map);
+    }
 }

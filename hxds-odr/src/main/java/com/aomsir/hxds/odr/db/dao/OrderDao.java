@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public interface OrderDao {
-    
+    public HashMap searchDriverTodayBusinessData(long driverId);
 }
 
 

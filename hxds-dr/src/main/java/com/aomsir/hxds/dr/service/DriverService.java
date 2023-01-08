@@ -13,4 +13,5 @@ public interface DriverService {
     public HashMap login(String code);
 
     public HashMap searchDriverBaseInfo(long driverId);
+
 }

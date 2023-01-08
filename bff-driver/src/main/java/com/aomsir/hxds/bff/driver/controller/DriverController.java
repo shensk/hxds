@@ -99,4 +99,14 @@ public class DriverController {
         return R.ok()
                 .put("result", map);
     }
+
+    @PostMapping("/searchWorkbenchData")
+    @Operation(summary = "查询司机工作台数据")
+    @SaCheckLogin
+    public R searchWorkbenchData() {
+        long driverId = StpUtil.getLoginIdAsLong();
+        HashMap result = driverService.searchWorkbenchData(driverId);
+        return R.ok()
+                .put("result", result);
+    }
 }

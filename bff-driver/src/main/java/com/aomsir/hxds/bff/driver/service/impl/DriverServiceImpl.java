@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import com.aomsir.hxds.bff.driver.controller.form.*;
 import com.aomsir.hxds.bff.driver.feign.DrServiceApi;
+import com.aomsir.hxds.bff.driver.feign.OdrServiceApi;
 import com.aomsir.hxds.bff.driver.service.DriverService;
 import com.aomsir.hxds.common.util.R;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
@@ -21,6 +22,11 @@ public class DriverServiceImpl implements DriverService {
     private static final Logger log = LoggerFactory.getLogger(DriverServiceImpl.class);
     @Resource
     private DrServiceApi drServiceApi;   // Driver Feign接口
+
+
+    @Resource
+    private OdrServiceApi odrServiceApi;
+
 
     @Override
     @Transactional
@@ -66,5 +72,26 @@ public class DriverServiceImpl implements DriverService {
         R r = this.drServiceApi.searchDriverBaseInfo(form);
         HashMap map = (HashMap) r.get("result");
         return map;
+    }
+
+
+    @Override
+    public HashMap searchWorkbenchData(long driverId) {
+        //查询司机当天业务数据
+        SearchDriverTodayBusinessDataForm form_1 = new SearchDriverTodayBusinessDataForm();
+        form_1.setDriverId(driverId);
+        R r = this.odrServiceApi.searchDriverTodayBusinessData(form_1);
+        HashMap business = (HashMap) r.get("result");
+
+        //查询司机的设置
+        SearchDriverSettingsForm form_2 = new SearchDriverSettingsForm();
+        form_2.setDriverId(driverId);
+        r = this.drServiceApi.searchDriverSettings(form_2);
+        HashMap settings = (HashMap) r.get("result");
+        HashMap result = new HashMap() {{
+            put("business", business);
+            put("settings", settings);
+        }};
+        return result;
     }
 }

@@ -10,4 +10,12 @@
         SET driver_id = #{driverId},
             settings = #{settings}
     </insert>
+
+    <!--查询司机设置-->
+    <select id="searchDriverSettings" parameterType="long" resultType="String">
+        SELECT settings
+        FROM tb_driver_settings
+        WHERE driver_id = #{driverId}
+    </select>
+
 </mapper>

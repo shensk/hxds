@@ -8,6 +8,8 @@ import com.aomsir.hxds.dr.db.pojo.DriverSettingsEntity;
 public interface DriverSettingsDao {
 
     public int insertDriverSettings(DriverSettingsEntity entity);
+
+    public String searchDriverSettings(long driverId);
 }
 
 
