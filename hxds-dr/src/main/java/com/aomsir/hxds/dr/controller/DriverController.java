@@ -76,7 +76,7 @@ public class DriverController {
                 .put("result", result);
     }
 
-    @PostMapping("/searchDriverSettings")
+    @PostMapping("/settings/searchDriverSettings")
     @Operation(summary = "查询司机的设置")
     public R searchDriverSettings(@RequestBody @Valid SearchDriverSettingsForm form) {
         HashMap map = this.driverSettingsService.searchDriverSettings(form.getDriverId());
