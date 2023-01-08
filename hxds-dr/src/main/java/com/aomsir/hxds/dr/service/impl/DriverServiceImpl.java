@@ -6,6 +6,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.aomsir.hxds.common.exception.HxdsException;
 import com.aomsir.hxds.common.util.MicroAppUtil;
+import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.dr.db.dao.DriverDao;
 import com.aomsir.hxds.dr.db.dao.DriverSettingsDao;
 import com.aomsir.hxds.dr.db.dao.WalletDao;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -168,4 +170,20 @@ public class DriverServiceImpl implements DriverService {
         return result;
     }
 
+
+    @Override
+    public PageUtils searchDriverByPage(Map param) {
+        long count = this.driverDao.searchDriverCount(param);
+        ArrayList<HashMap> list = null;
+        if (count == 0) {
+            list = new ArrayList<>();
+        } else {
+            list = this.driverDao.searchDriverByPage(param);
+        }
+
+        int start = (Integer) param.get("start");
+        int length = (Integer) param.get("length");
+        PageUtils pageUtils = new PageUtils(list, count, start, length);   // 封装分页对象
+        return pageUtils;
+    }
 }

@@ -1,5 +1,8 @@
 package com.aomsir.hxds.dr.service;
 
+import com.aomsir.hxds.common.util.PageUtils;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,4 +17,5 @@ public interface DriverService {
 
     public HashMap searchDriverBaseInfo(long driverId);
 
+    public PageUtils searchDriverByPage(Map param);
 }

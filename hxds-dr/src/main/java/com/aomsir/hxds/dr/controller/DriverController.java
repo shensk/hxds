@@ -2,6 +2,7 @@ package com.aomsir.hxds.dr.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.dr.controller.form.*;
 import com.aomsir.hxds.dr.db.dao.DriverSettingsDao;
@@ -82,5 +83,18 @@ public class DriverController {
         HashMap map = this.driverSettingsService.searchDriverSettings(form.getDriverId());
         return R.ok()
                 .put("result", map);
+    }
+
+    @PostMapping("/searchDriverByPage")
+    @Operation(summary = "查询司机分页记录")
+    public R searchDriverByPage(@RequestBody @Valid SearchDriverByPageForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int page = form.getPage();
+        int length = form.getLength();
+        int start = (page - 1) * length;
+        param.put("start", start);
+        PageUtils pageUtils = this.driverService.searchDriverByPage(param);
+        return R.ok()
+                .put("result", pageUtils);
     }
 }
