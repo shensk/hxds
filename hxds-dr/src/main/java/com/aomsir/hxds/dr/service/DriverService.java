@@ -22,4 +22,6 @@ public interface DriverService {
     public HashMap searchDriverAuth(long driverId);
 
     public HashMap searchDriverRealSummary(long driverId);
+
+    public int updateDriverRealAuth(Map param);
 }

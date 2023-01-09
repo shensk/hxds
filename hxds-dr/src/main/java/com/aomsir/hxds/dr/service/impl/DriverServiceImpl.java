@@ -199,4 +199,13 @@ public class DriverServiceImpl implements DriverService {
         HashMap map = this.driverDao.searchDriverRealSummary(driverId);
         return map;
     }
+
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int updateDriverRealAuth(Map param) {
+        int rows = this.driverDao.updateDriverRealAuth(param);
+        return rows;
+    }
 }

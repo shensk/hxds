@@ -7,9 +7,12 @@ import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.mis.api.controller.form.SearchDriverByPageForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchDriverRealSummaryForm;
+import com.aomsir.hxds.mis.api.controller.form.UpdateDriverRealAuthForm;
 import com.aomsir.hxds.mis.api.feign.DrServiceApi;
 import com.aomsir.hxds.mis.api.service.DriverService;
+import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -64,5 +67,16 @@ public class DriverServiceImpl implements DriverService {
             //TODO 这里以后还有很多要写的东西
         }
         return map;
+    }
+
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int updateDriverRealAuth(UpdateDriverRealAuthForm form) {
+        R r = this.drServiceApi.updateDriverRealAuth(form);
+        int rows = MapUtil.getInt(r, "rows");
+        //TODO 此处应该调用消息子系统发送通知消息
+        return rows;
     }
 }
