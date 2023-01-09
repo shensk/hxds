@@ -1,5 +1,6 @@
 package com.aomsir.hxds.bff.customer.feign;
 
+import com.aomsir.hxds.bff.customer.controller.form.LoginForm;
 import com.aomsir.hxds.bff.customer.controller.form.RegisterNewCustomerForm;
 import com.aomsir.hxds.common.util.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -10,4 +11,7 @@ public interface CstServiceApi {
 
     @PostMapping("/customer/registerNewCustomer")
     public R registerNewCustomer(RegisterNewCustomerForm form);
+
+    @PostMapping("/customer/login")
+    public R login(LoginForm form);
 }

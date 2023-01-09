@@ -35,4 +35,13 @@
         WHERE open_id = #{openId}
     </select>
 
+
+    <!--乘客登陆-->
+    <select id="login" parameterType="String" resultType="String">
+        SELECT CAST(id AS CHAR) AS id
+        FROM tb_customer
+        WHERE `status` != 2 AND open_id = #{openId}
+    </select>
+
+
 </mapper>

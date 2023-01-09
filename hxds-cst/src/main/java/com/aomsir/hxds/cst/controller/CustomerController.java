@@ -2,6 +2,7 @@ package com.aomsir.hxds.cst.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.aomsir.hxds.common.util.R;
+import com.aomsir.hxds.cst.controller.form.LoginForm;
 import com.aomsir.hxds.cst.controller.form.RegisterNewCustomerForm;
 import com.aomsir.hxds.cst.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +28,15 @@ public class CustomerController {
     public R registerNewCustomer(@RequestBody @Valid RegisterNewCustomerForm form) {
         Map param = BeanUtil.beanToMap(form);   // 将json转换为Map
         String userId = this.customerService.registerNewCustomer(param);
+        return R.ok()
+                .put("userId", userId);
+    }
+
+
+    @PostMapping("/login")
+    @Operation(summary = "登陆系统")
+    public R login(@RequestBody @Valid LoginForm form) {
+        String userId = this.customerService.login(form.getCode());
         return R.ok()
                 .put("userId", userId);
     }

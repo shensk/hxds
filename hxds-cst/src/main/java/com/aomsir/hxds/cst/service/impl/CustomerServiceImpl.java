@@ -6,6 +6,7 @@ import com.aomsir.hxds.common.util.MicroAppUtil;
 import com.aomsir.hxds.cst.db.dao.CustomerDao;
 import com.aomsir.hxds.cst.service.CustomerService;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -19,6 +20,8 @@ import java.util.Map;
  * @Email: info@say521.cn
  * @GitHub: https://github.com/aomsir
  */
+
+@Service
 public class CustomerServiceImpl implements CustomerService {
 
     @Resource
@@ -46,6 +49,15 @@ public class CustomerServiceImpl implements CustomerService {
         this.customerDao.registerNewCustomer(param);
         String customerId = this.customerDao.searchCustomerId(openId);
 
+        return customerId;
+    }
+
+
+    @Override
+    public String login(String code) {
+        String openId = this.microAppUtil.getOpenId(code);
+        String customerId = this.customerDao.login(openId);
+        customerId = (customerId != null ? customerId : "");
         return customerId;
     }
 }
