@@ -199,4 +199,22 @@
     </select>
 
 
+    <!--查询司机实名信息摘要-->
+    <select id="searchDriverRealSummary" parameterType="long" resultType="HashMap">
+        SELECT timestampdiff(YEAR,drcard_issue_date, NOW()) AS `year`,
+               birthday,
+               email,
+               mail_address                                 AS mailAddress,
+               idcard_address                               AS idcardAddress,
+               idcard_front                                 AS idcardFront,
+               idcard_back                                  AS idcardBack,
+               idcard_holding                               AS idcardHolding,
+               drcard_front                                 AS drcardFront,
+               drcard_back                                  AS drcardBack,
+               drcard_holding                               AS drcardHolding
+        FROM tb_driver
+        WHERE id = #{driverId}
+    </select>
+
+
 </mapper>

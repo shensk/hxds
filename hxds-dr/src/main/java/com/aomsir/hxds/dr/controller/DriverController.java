@@ -5,7 +5,6 @@ import cn.hutool.core.bean.BeanUtil;
 import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.dr.controller.form.*;
-import com.aomsir.hxds.dr.db.dao.DriverSettingsDao;
 import com.aomsir.hxds.dr.service.DriverService;
 import com.aomsir.hxds.dr.service.DriverSettingsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -104,5 +103,14 @@ public class DriverController {
         HashMap result = this.driverService.searchDriverAuth(form.getDriverId());
         return R.ok()
                 .put("result", result);
+    }
+
+
+    @PostMapping("/searchDriverRealSummary")
+    @Operation(summary = "查询司机实名信息摘要")
+    public R searchDriverRealSummary(@RequestBody @Valid SearchDriverRealSummaryForm form) {
+        HashMap map = this.driverService.searchDriverRealSummary(form.getDriverId());
+        return R.ok()
+                .put("result", map);
     }
 }

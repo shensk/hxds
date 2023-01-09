@@ -193,4 +193,10 @@ public class DriverServiceImpl implements DriverService {
         HashMap result = this.driverDao.searchDriverAuth(id);   // 根据司机ID查询司机认证信息
         return result;
     }
+
+    @Override
+    public HashMap searchDriverRealSummary(long driverId) {
+        HashMap map = this.driverDao.searchDriverRealSummary(driverId);
+        return map;
+    }
 }
