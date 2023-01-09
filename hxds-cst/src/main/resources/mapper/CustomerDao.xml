@@ -4,4 +4,35 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aomsir.hxds.cst.db.dao.CustomerDao">
 
+    <!--注册新顾客-->
+    <insert id="registerNewCustomer" parameterType="Map">
+        INSERT INTO tb_customer
+        SET open_id = #{openId},
+            nickname = #{nickname},
+            sex = #{sex},
+            photo = #{photo},
+            tel = #{tel},
+            `status` = 1
+    </insert>
+
+    <!--查询当前当前用户是否注册-->
+    <select id="hasCustomer" parameterType="Map" resultType="long">
+        SELECT COUNT(id) AS ct
+        FROM tb_customer
+        WHERE 1=1   <!--为了下面的条件能有where-->
+        <if test="openId!=null">
+            AND open_id = #{openId}
+        </if>
+        <if test="customerId!=null">
+            AND id = #{customerId}
+        </if>
+    </select>
+
+    <!--查询用户id-->
+    <select id="searchCustomerId" parameterType="String" resultType="String">
+        SELECT CAST(id AS CHAR) AS id
+        FROM tb_customer
+        WHERE open_id = #{openId}
+    </select>
+
 </mapper>
