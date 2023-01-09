@@ -186,4 +186,11 @@ public class DriverServiceImpl implements DriverService {
         PageUtils pageUtils = new PageUtils(list, count, start, length);   // 封装分页对象
         return pageUtils;
     }
+
+
+    @Override
+    public HashMap searchDriverAuth(long id) {
+        HashMap result = this.driverDao.searchDriverAuth(id);   // 根据司机ID查询司机认证信息
+        return result;
+    }
 }

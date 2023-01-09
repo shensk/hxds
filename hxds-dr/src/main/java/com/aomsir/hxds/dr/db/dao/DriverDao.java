@@ -25,6 +25,8 @@ public interface DriverDao {
     public ArrayList<HashMap> searchDriverByPage(Map param);
 
     public long searchDriverCount(Map param);
+
+    public HashMap searchDriverAuth(long driverId);
 }
 
 

@@ -109,4 +109,17 @@ public class DriverController {
         return R.ok()
                 .put("result", result);
     }
+
+
+    @GetMapping("/searchDriverAuth")
+    @Operation(summary = "查询司机认证信息")
+    @SaCheckLogin
+    public R searchDriverAuth() {
+        long driverId = StpUtil.getLoginIdAsLong();
+        SearchDriverAuthForm form = new SearchDriverAuthForm();
+        form.setDriverId(driverId);
+        HashMap map = this.driverService.searchDriverAuth(form);
+        return R.ok()
+                .put("result", map);
+    }
 }
