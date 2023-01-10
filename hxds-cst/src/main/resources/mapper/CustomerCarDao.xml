@@ -4,4 +4,28 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aomsir.hxds.cst.db.dao.CustomerCarDao">
 
+    <!--插入乘客车辆信息-->
+    <insert id="insert" parameterType="com.aomsir.hxds.cst.db.pojo.CustomerCarEntity">
+        INSERT INTO tb_customer_car
+        SET customer_id = #{customerId},
+            car_plate = #{carPlate},
+            car_type = #{carType}
+    </insert>
+
+    <!--查找乘客车辆列表-->
+    <select id="searchCustomerCarList" parameterType="long" resultType="HashMap">
+        SELECT CAST(id AS CHAR) AS id,
+               car_plate        AS carPlate,
+               car_type         AS carType
+        FROM tb_customer_car
+        WHERE customer_id = #{customerId}
+    </select>
+
+    <!--根据ID删除乘客车辆-->
+    <delete id="deleteCustomerCarById" parameterType="long">
+        DELETE
+        FROM tb_customer_car
+        WHERE id = #{id}
+    </delete>
+
 </mapper>

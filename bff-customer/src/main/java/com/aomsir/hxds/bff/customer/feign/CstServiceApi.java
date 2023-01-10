@@ -1,7 +1,6 @@
 package com.aomsir.hxds.bff.customer.feign;
 
-import com.aomsir.hxds.bff.customer.controller.form.LoginForm;
-import com.aomsir.hxds.bff.customer.controller.form.RegisterNewCustomerForm;
+import com.aomsir.hxds.bff.customer.controller.form.*;
 import com.aomsir.hxds.common.util.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,4 +13,13 @@ public interface CstServiceApi {
 
     @PostMapping("/customer/login")
     public R login(LoginForm form);
+
+    @PostMapping("/customer/car/insertCustomerCar")
+    public R insertCustomerCar(InsertCustomerCarForm form);
+
+    @PostMapping("/customer/car/searchCustomerCarList")
+    public R searchCustomerCarList(SearchCustomerCarListForm form);
+
+    @PostMapping("/customer/car/deleteCustomerCarById")
+    public R deleteCustomerCarById(DeleteCustomerCarByIdForm form);
 }
