@@ -17,7 +17,7 @@
         </if>
     </select>
 
-    <!--注册新司机-->
+    <!--注册新司机、点击立即注册的时候发送的Ajax-->
     <insert id="registerNewDriver" parameterType="Map">
         INSERT INTO tb_driver
         SET open_id = #{openId},
@@ -36,7 +36,7 @@
         WHERE open_id = #{openId}
     </select>
 
-    <!--更新司机信息-->
+    <!--更新司机信息、实名认证的时候的Ajax-->
     <update id="updateDriverAuth" parameterType="Map">
         UPDATE tb_driver
         SET `name`            = #{name},

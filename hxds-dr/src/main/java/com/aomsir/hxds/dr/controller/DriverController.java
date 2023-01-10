@@ -64,7 +64,8 @@ public class DriverController {
 
         // code是bff系统传递过来的临时ID
         HashMap map = this.driverService.login(form.getCode());
-        return R.ok().put("result", map);
+        return R.ok()
+                .put("result", map);
     }
 
 

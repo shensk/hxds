@@ -63,7 +63,7 @@ public class DriverServiceImpl implements DriverService {
     public String registerNewDriver(Map param) {
 
         String code = MapUtil.getStr(param, "code");   // 获取临时授权字符串
-        String openId = this.microAppUtil.getOpenId(code);  // 兑换成永久ID
+        String openId = this.microAppUtil.getOpenId(code);  // 兑换成永久openId
 
         HashMap tempMap = new HashMap(){{
            put("openId", openId);
@@ -74,7 +74,7 @@ public class DriverServiceImpl implements DriverService {
 
         param.put("openId", openId);
         this.driverDao.registerNewDriver(param);    // 没有注册,进行注册
-        String driverId = this.driverDao.searchDriverId(openId);   // 获取司机ID
+        String driverId = this.driverDao.searchDriverId(openId);   // 获取司机ID、用户登陆
 
         // 设置司机默认属性
         JSONObject json = new JSONObject();

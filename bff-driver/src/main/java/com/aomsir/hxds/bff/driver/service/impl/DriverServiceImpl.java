@@ -36,8 +36,7 @@ public class DriverServiceImpl implements DriverService {
     @Transactional
     @LcnTransaction
     public long registerNewDriver(RegisterNewDriverForm form) {
-        log.info("{}",form);
-        R r = this.drServiceApi.registerNewDriver(form);  // 调用远程方法,获取封装了userID的R对象
+        R r = this.drServiceApi.registerNewDriver(form);  // 调用远程方法,获取封装了userId的R对象
         long userId = Convert.toLong(r.get("userId"));
         return userId;
     }
