@@ -1,6 +1,7 @@
 package com.aomsir.hxds.mps.controller;
 
 import com.aomsir.hxds.common.util.R;
+import com.aomsir.hxds.mps.controller.form.CalculateDriveLineForm;
 import com.aomsir.hxds.mps.controller.form.EstimateOrderMileageAndMinuteForm;
 import com.aomsir.hxds.mps.service.MapService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +28,18 @@ public class MapController {
         HashMap map = this.mapService.estimateOrderMileageAndMinute(form.getMode(),
                 form.getStartPlaceLatitude(), form.getStartPlaceLongitude(),
                 form.getEndPlaceLatitude(), form.getEndPlaceLongitude());
+        return R.ok()
+                .put("result", map);
+    }
+
+
+    @PostMapping("/calculateDriveLine")
+    @Operation(summary = "计算行驶路线")
+    public R calculateDriveLine(@RequestBody @Valid CalculateDriveLineForm form) {
+        HashMap map = this.mapService.calculateDriveLine(form.getStartPlaceLatitude(),
+                form.getStartPlaceLongitude(),
+                form.getEndPlaceLatitude(),
+                form.getEndPlaceLongitude());
         return R.ok()
                 .put("result", map);
     }

@@ -21,6 +21,8 @@ public class MapServiceImpl implements MapService {
 
     private String distanceUrl = "https://apis.map.qq.com/ws/distance/v1/matrix/";    //腾讯地图服务预估里程的API地址
 
+    private String directionUrl = "https://apis.map.qq.com/ws/direction/v1/driving/";  //规划行进路线的API地址
+
     @Value("${tencent.map.key}")
     private String key;    // 腾讯地图服务
 
@@ -28,8 +30,8 @@ public class MapServiceImpl implements MapService {
                                                  String startPlaceLatitude,
                                                  String startPlaceLongitude,
                                                  String endPlaceLatitude,
-                                                 String endPlaceLongitude) {
-        HttpRequest req = new HttpRequest(distanceUrl);   // 这个HttpRequest是hutool提供的
+                                                  String endPlaceLongitude) {
+        HttpRequest req = new HttpRequest(this.distanceUrl);   // 这个HttpRequest是hutool提供的
         req.form("mode", mode);                                                   // 步行/驾车/自行车
         req.form("from", startPlaceLatitude + "," + startPlaceLongitude);   // 起点的纬度,精度
         req.form("to", endPlaceLatitude + "," + endPlaceLongitude);         // 终点的纬度,精度
@@ -58,6 +60,28 @@ public class MapServiceImpl implements MapService {
             put("mileage", mileage);
             put("minute", minute);
         }};
+        return map;
+    }
+
+
+    @Override
+    public HashMap calculateDriveLine(String startPlaceLatitude,
+                                      String startPlaceLongitude,
+                                      String endPlaceLatitude,
+                                      String endPlaceLongitude) {
+        HttpRequest req = new HttpRequest(this.directionUrl);
+        req.form("from", startPlaceLatitude + "," + startPlaceLongitude);
+        req.form("to", endPlaceLatitude + "," + endPlaceLongitude);
+        req.form("key", key);
+
+        HttpResponse resp = req.execute();
+        JSONObject json = JSONUtil.parseObj(resp.body());
+        int status = json.getInt("status");
+        if (status != 0) {
+            throw new HxdsException("执行异常");
+        }
+        JSONObject result = json.getJSONObject("result");   // 获取所有的线路,交给bff去获取最佳路线
+        HashMap map = result.toBean(HashMap.class);
         return map;
     }
 }

@@ -10,4 +10,8 @@ public interface MapService {
                                                  String endPlaceLongitude);
 
 
+    public HashMap calculateDriveLine(String startPlaceLatitude,
+                                      String startPlaceLongitude,
+                                      String endPlaceLatitude,
+                                      String endPlaceLongitude);
 }
