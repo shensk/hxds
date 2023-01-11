@@ -3,6 +3,7 @@ package com.aomsir.hxds.mps.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.mps.controller.form.RemoveLocationCacheForm;
+import com.aomsir.hxds.mps.controller.form.SearchBefittingDriverAboutOrderForm;
 import com.aomsir.hxds.mps.controller.form.UpdateLocationCacheForm;
 import com.aomsir.hxds.mps.service.DriverLocationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Map;
 
 @RestController
@@ -39,5 +41,19 @@ public class DriverLocationController {
     public R removeLocationCache(@RequestBody @Valid RemoveLocationCacheForm form) {
         this.driverLocationService.removeLocationCache(form.getDriverId());
         return R.ok();
+    }
+
+    @PostMapping("/searchBefittingDriverAboutOrder")
+    @Operation(summary = "查询符合某个订单接单的司机列表")
+    public R searchBefittingDriverAboutOrder(@RequestBody @Valid SearchBefittingDriverAboutOrderForm form) {
+        double startPlaceLatitude = Double.parseDouble(form.getStartPlaceLatitude());
+        double startPlaceLongitude = Double.parseDouble(form.getStartPlaceLongitude());
+        double endPlaceLatitude = Double.parseDouble(form.getEndPlaceLatitude());
+        double endPlaceLongitude = Double.parseDouble(form.getEndPlaceLongitude());
+        double mileage = Double.parseDouble(form.getMileage());
+        ArrayList list = this.driverLocationService.searchBefittingDriverAboutOrder(startPlaceLatitude,
+                            startPlaceLongitude, endPlaceLatitude, endPlaceLongitude, mileage);
+        return R.ok()
+                .put("result", list);
     }
 }

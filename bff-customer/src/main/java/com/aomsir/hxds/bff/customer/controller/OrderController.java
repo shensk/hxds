@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/order")
@@ -25,12 +26,12 @@ public class OrderController {
     @PostMapping("/createNewOrder")
     @Operation(summary = "创建新订单")
     @SaCheckLogin
-    public R createNewOrder(@RequestBody @Valid CreateNewOrderForm form) {
-        Long customerId = StpUtil.getLoginIdAsLong();
+    public R createNewOrder(@RequestBody @Valid CreateNewOrderForm form){
+        long customerId = StpUtil.getLoginIdAsLong();
         form.setCustomerId(customerId);
-        int count = this.orderService.createNewOrder(form);
+        HashMap result = this.orderService.createNewOrder(form);
         return R.ok()
-                .put("count", count);
+                .put("result",result);
     }
-
 }
+
