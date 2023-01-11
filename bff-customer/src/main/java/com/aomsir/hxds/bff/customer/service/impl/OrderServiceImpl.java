@@ -30,8 +30,8 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private RuleServiceApi ruleServiceApi;
 
-    @Resource
-    private SnmServiceApi snmServiceApi;
+    // @Resource
+    // private SnmServiceApi snmServiceApi;
     
     @Override
     @Transactional
