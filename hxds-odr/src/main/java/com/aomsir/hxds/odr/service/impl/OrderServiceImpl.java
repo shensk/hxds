@@ -120,4 +120,40 @@ public class OrderServiceImpl implements OrderService {
         HashMap map = orderDao.searchDriverExecuteOrder(param);
         return map;
     }
+
+
+    @Override
+    public Integer searchOrderStatus(Map param) {
+        Integer status = this.orderDao.searchOrderStatus(param);
+        if (status == null) {
+            throw new HxdsException("没有查询到数据，请核对查询条件");
+        }
+        return status;
+    }
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public String deleteUnAcceptOrder(Map param) {
+        long orderId = MapUtil.getLong(param, "orderId");
+        if (!this.redisTemplate.hasKey("order#" + orderId)) {
+            return "订单取消失败";
+        }
+        this.redisTemplate.execute(new SessionCallback() {
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                operations.watch("order#" + orderId);
+                operations.multi();
+                operations.opsForValue().set("order#" + orderId, "none");
+                return operations.exec();
+            }
+        });
+
+        this.redisTemplate.delete("order#" + orderId);
+        int rows = this.orderDao.deleteUnAcceptOrder(param);
+        if (rows != 1) {
+            return "订单取消失败";
+        }
+        return "订单取消成功";
+    }
 }

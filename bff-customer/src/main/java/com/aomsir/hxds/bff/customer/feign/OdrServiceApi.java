@@ -1,6 +1,8 @@
 package com.aomsir.hxds.bff.customer.feign;
 
+import com.aomsir.hxds.bff.customer.controller.form.DeleteUnAcceptOrderForm;
 import com.aomsir.hxds.bff.customer.controller.form.InsertOrderForm;
+import com.aomsir.hxds.bff.customer.controller.form.SearchOrderStatusForm;
 import com.aomsir.hxds.common.util.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,4 +12,11 @@ public interface OdrServiceApi {
     
     @PostMapping("/order/insertOrder")
     public R insertOrder(InsertOrderForm form);
+
+    @PostMapping("/order/searchOrderStatus")
+    public R searchOrderStatus(SearchOrderStatusForm form);
+
+    @PostMapping("/order/deleteUnAcceptOrder")
+    public R deleteUnAcceptOrder(DeleteUnAcceptOrderForm form);
+
 }

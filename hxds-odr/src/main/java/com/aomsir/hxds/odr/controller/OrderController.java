@@ -3,10 +3,7 @@ package com.aomsir.hxds.odr.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONObject;
 import com.aomsir.hxds.common.util.R;
-import com.aomsir.hxds.odr.controller.form.AcceptNewOrderForm;
-import com.aomsir.hxds.odr.controller.form.InsertOrderForm;
-import com.aomsir.hxds.odr.controller.form.SearchDriverExecuteOrderForm;
-import com.aomsir.hxds.odr.controller.form.SearchDriverTodayBusinessDataForm;
+import com.aomsir.hxds.odr.controller.form.*;
 import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
 import com.aomsir.hxds.odr.db.pojo.OrderEntity;
 import com.aomsir.hxds.odr.service.OrderService;
@@ -93,5 +90,23 @@ public class OrderController {
         HashMap map = orderService.searchDriverExecuteOrder(param);
         return R.ok()
                 .put("result", map);
+    }
+
+    @PostMapping("/searchOrderStatus")
+    @Operation(summary = "查询订单状态")
+    public R searchOrderStatus(@RequestBody @Valid SearchOrderStatusForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        Integer status = this.orderService.searchOrderStatus(param);
+        return R.ok()
+                .put("result", status);
+    }
+
+    @PostMapping("/deleteUnAcceptOrder")
+    @Operation(summary = "删除没有司机接单的订单")
+    public R deleteUnAcceptOrder(@RequestBody @Valid DeleteUnAcceptOrderForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        String result = this.orderService.deleteUnAcceptOrder(param);
+        return R.ok()
+                .put("result", result);
     }
 }

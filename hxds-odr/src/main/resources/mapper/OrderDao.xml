@@ -69,4 +69,29 @@
     </select>
 
 
+    <!--乘客轮询查询订单状态-->
+    <select id="searchOrderStatus" parameterType="Map" resultType="Integer">
+        SELECT status
+        FROM tb_order
+        WHERE id = #{orderId}
+        <if test="driverId!=null">
+            AND driver_id = #{driverId}
+        </if>
+        <if test="customerId!=null">
+            AND customer_id = #{customerId}
+        </if>
+    </select>
+
+    <!--乘客订单超时就删除-->
+    <delete id="deleteUnAcceptOrder" parameterType="Map">
+        DELETE FROM tb_order
+        WHERE id = #{orderId}
+        <if test="driverId!=null">
+            AND driver_id = #{driverId}
+        </if>
+        <if test="customerId!=null">
+            AND customer_id = #{customerId}
+        </if>
+    </delete>
+
 </mapper>
