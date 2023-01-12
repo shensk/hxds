@@ -2,6 +2,7 @@ package com.aomsir.hxds.odr.controller;
 
 import cn.hutool.json.JSONObject;
 import com.aomsir.hxds.common.util.R;
+import com.aomsir.hxds.odr.controller.form.AcceptNewOrderForm;
 import com.aomsir.hxds.odr.controller.form.InsertOrderForm;
 import com.aomsir.hxds.odr.controller.form.SearchDriverTodayBusinessDataForm;
 import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
@@ -72,5 +73,13 @@ public class OrderController {
         String id = this.orderService.insertOrder(orderEntity, billEntity);
         return R.ok()
                 .put("result", id);
+    }
+
+
+    @PostMapping("/acceptNewOrder")
+    @Operation(summary = "司机接单")
+    public R acceptNewOrder(@RequestBody @Valid AcceptNewOrderForm form) {
+        String result = this.orderService.acceptNewOrder(form.getDriverId(), form.getOrderId());
+        return R.ok().put("result", result);
     }
 }

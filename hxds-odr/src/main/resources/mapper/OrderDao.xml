@@ -41,5 +41,15 @@
         WHERE uuid = #{uuid}
     </select>
 
+    <!--司机抢到订单,更新订单表-->
+    <update id="acceptNewOrder" parameterType="Map">
+        UPDATE tb_order
+        SET driver_id   = #{driverId},
+            accept_time = NOW(),
+            `status`=2
+        WHERE id = #{orderId}
+    </update>
+
+
 
 </mapper>

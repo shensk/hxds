@@ -9,4 +9,5 @@ public interface OrderService {
     public HashMap searchDriverTodayBusinessData(long driverId);
 
     public String insertOrder(OrderEntity orderEntity, OrderBillEntity billEntity);
+    public String acceptNewOrder(long driverId, long orderId);
 }
