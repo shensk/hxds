@@ -51,5 +51,22 @@
     </update>
 
 
+    <!--查询当前司机正在执行的订单-->
+    <select id="searchDriverExecuteOrder" parameterType="Map" resultType="HashMap">
+        SELECT CAST(id AS CHAR)                              AS id,
+               customer_id                                   AS customerId,
+               start_place                                   AS startPlace,
+               start_place_location                          AS startPlaceLocation,
+               end_place                                     AS endPlace,
+               end_place_location                            AS endPlaceLocation,
+               CAST(favour_fee AS CHAR)                      AS favourFee,
+               car_plate                                     AS carPlate,
+               car_type                                      AS carType,
+               DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') AS createTime
+        FROM tb_order
+        WHERE id = #{orderId}
+          AND driver_id = #{driverId}
+    </select>
+
 
 </mapper>

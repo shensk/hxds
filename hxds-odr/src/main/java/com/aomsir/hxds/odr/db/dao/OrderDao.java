@@ -13,6 +13,8 @@ public interface OrderDao {
     public String searchOrderIdByUUID(String uuid);
 
     public int acceptNewOrder(Map param);
+
+    public HashMap searchDriverExecuteOrder(Map param);
 }
 
 

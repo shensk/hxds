@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -111,6 +112,12 @@ public class OrderServiceImpl implements OrderService {
             throw new HxdsException("接单失败，无法更新订单记录");
         }
         return "接单成功";
+    }
 
+
+    @Override
+    public HashMap searchDriverExecuteOrder(Map param) {
+        HashMap map = orderDao.searchDriverExecuteOrder(param);
+        return map;
     }
 }

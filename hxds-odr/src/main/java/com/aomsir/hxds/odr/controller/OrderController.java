@@ -1,9 +1,11 @@
 package com.aomsir.hxds.odr.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONObject;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.odr.controller.form.AcceptNewOrderForm;
 import com.aomsir.hxds.odr.controller.form.InsertOrderForm;
+import com.aomsir.hxds.odr.controller.form.SearchDriverExecuteOrderForm;
 import com.aomsir.hxds.odr.controller.form.SearchDriverTodayBusinessDataForm;
 import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
 import com.aomsir.hxds.odr.db.pojo.OrderEntity;
@@ -19,6 +21,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
@@ -81,5 +84,14 @@ public class OrderController {
     public R acceptNewOrder(@RequestBody @Valid AcceptNewOrderForm form) {
         String result = this.orderService.acceptNewOrder(form.getDriverId(), form.getOrderId());
         return R.ok().put("result", result);
+    }
+
+    @PostMapping("/searchDriverExecuteOrder")
+    @Operation(summary = "查询司机正在执行的订单记录")
+    public R searchDriverExecuteOrder(@RequestBody @Valid SearchDriverExecuteOrderForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        HashMap map = orderService.searchDriverExecuteOrder(param);
+        return R.ok()
+                .put("result", map);
     }
 }
