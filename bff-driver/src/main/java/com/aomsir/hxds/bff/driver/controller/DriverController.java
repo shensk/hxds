@@ -4,7 +4,9 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.map.MapUtil;
 import com.aomsir.hxds.bff.driver.controller.form.*;
+import com.aomsir.hxds.bff.driver.service.DriverLocationService;
 import com.aomsir.hxds.bff.driver.service.DriverService;
+import com.aomsir.hxds.bff.driver.service.NewOrderMessageService;
 import com.aomsir.hxds.common.util.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +22,12 @@ import java.util.HashMap;
 public class DriverController {
     @Resource
     private DriverService driverService;
+
+    @Resource
+    private DriverLocationService locationService;
+
+    @Resource
+    private NewOrderMessageService newOrderMessageService;
 
     @PostMapping("/registerNewDriver")
     @Operation(summary = "新司机注册")
@@ -121,5 +129,43 @@ public class DriverController {
         HashMap map = this.driverService.searchDriverAuth(form);
         return R.ok()
                 .put("result", map);
+    }
+
+
+    @PostMapping("/startWork")
+    @Operation(summary = "开始接单")
+    @SaCheckLogin
+    public R startWork() {
+        long driverId = StpUtil.getLoginIdAsLong();
+
+        //删除司机定位缓存
+        RemoveLocationCacheForm form_1 = new RemoveLocationCacheForm();
+        form_1.setDriverId(driverId);
+        this.locationService.removeLocationCache(form_1);
+
+        //清空新订单消息列表
+        ClearNewOrderQueueForm form_2 = new ClearNewOrderQueueForm();
+        form_2.setUserId(driverId);
+        this.newOrderMessageService.clearNewOrderQueue(form_2);
+
+        return R.ok();
+    }
+
+    @PostMapping("/stopWork")
+    @Operation(summary = "停止接单")
+    @SaCheckLogin
+    public R stopWork() {
+        long driverId = StpUtil.getLoginIdAsLong();
+        //删除司机定位缓存
+        RemoveLocationCacheForm form_1 = new RemoveLocationCacheForm();
+        form_1.setDriverId(driverId);
+        this.locationService.removeLocationCache(form_1);
+
+        //清空新订单消息列表
+        ClearNewOrderQueueForm form_2 = new ClearNewOrderQueueForm();
+        form_2.setUserId(driverId);
+        this.newOrderMessageService.clearNewOrderQueue(form_2);
+
+        return R.ok();
     }
 }
