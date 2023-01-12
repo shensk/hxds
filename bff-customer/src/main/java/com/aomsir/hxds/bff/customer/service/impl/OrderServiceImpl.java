@@ -7,6 +7,7 @@ import com.aomsir.hxds.bff.customer.controller.form.*;
 import com.aomsir.hxds.bff.customer.feign.MpsServiceApi;
 import com.aomsir.hxds.bff.customer.feign.OdrServiceApi;
 import com.aomsir.hxds.bff.customer.feign.RuleServiceApi;
+import com.aomsir.hxds.bff.customer.feign.SnmServiceApi;
 import com.aomsir.hxds.bff.customer.service.OrderService;
 import com.aomsir.hxds.common.util.R;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,8 +33,8 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private RuleServiceApi ruleServiceApi;
 
-    // @Resource
-    // private SnmServiceApi snmServiceApi;
+     @Resource
+     private SnmServiceApi snmServiceApi;
     
     @Override
     @Transactional
@@ -80,8 +83,6 @@ public class OrderServiceImpl implements OrderService {
         String exceedReturnPrice = MapUtil.getStr(map, "exceedReturnPrice");
 
 
-        // TODO 搜索适合接单的司机
-        // TODO 如果存在适合接单的司机就创建订单，否则就不创建订单
         /*
          * 搜索适合接单的司机
          */
@@ -130,7 +131,32 @@ public class OrderServiceImpl implements OrderService {
             r = this.odrServiceApi.insertOrder(form_4);   // 插入订单
             String orderId = MapUtil.getStr(r, "result");
 
-            //TODO  发送通知给符合条件的司机抢单
+
+            /*
+             * 发送新订单通知给相关司机
+             */
+            SendNewOrderMessageForm form_5 = new SendNewOrderMessageForm();
+            String[] driverContent = new String[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                HashMap one = list.get(i);
+                String driverId = MapUtil.getStr(one, "driverId");
+                String distance = MapUtil.getStr(one, "distance");
+                distance = new BigDecimal(distance).setScale(1, RoundingMode.CEILING).toString();
+                driverContent[i] = driverId + "#" + distance;
+            }
+            form_5.setDriversContent(driverContent);
+            form_5.setOrderId(Long.parseLong(orderId));
+            form_5.setFrom(startPlace);
+            form_5.setTo(endPlace);
+            form_5.setExpectsFee(expectsFee);
+            //里程转化成保留小数点后一位
+            mileage = new BigDecimal(mileage).setScale(1, RoundingMode.CEILING).toString();
+            form_5.setMileage(mileage);
+            form_5.setMinute(minute);
+            form_5.setFavourFee(favourFee);
+            this.snmServiceApi.sendNewOrderMessageAsync(form_5); //异步发送消息
+            result.put("orderId",orderId);
+            result.replace("count",list.size());
             result.put("orderId",orderId);
             result.replace("count",list.size());
         }

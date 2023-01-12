@@ -44,7 +44,8 @@ public class DriverLocationServiceImpl implements DriverLocationService {
          */
 
         // 将司机实时定位存放在RedisGeo中
-        this.redisTemplate.opsForGeo().add("driver_location", point, driverId + "");
+        this.redisTemplate.opsForGeo()
+                .add("driver_location", point, driverId + "");
 
         //定向接单地址的经度
         String orientateLongitude = null;

@@ -18,7 +18,7 @@ spring:
     nacos:
       config:
         group: DEFAULT_GROUP
-        file-extension: yaml
+        file-extension: yml
         server-addr: 192.168.212.144:8848
         prefix: ${spring.application.name}
         namespace: 1366e61f-6ad9-4fe9-965b-4bbbf11dcde7

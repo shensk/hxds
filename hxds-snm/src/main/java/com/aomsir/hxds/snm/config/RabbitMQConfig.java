@@ -25,8 +25,8 @@ public class RabbitMQConfig {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);
         factory.setPort(port);
-//        factory.setUsername(username);
-//        factory.setPassword(password);
+        // factory.setUsername(username);
+        // factory.setPassword(password);
         return factory;
     }
 }
