@@ -1,6 +1,7 @@
 package com.aomsir.hxds.mps.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public interface DriverLocationService {
@@ -14,5 +15,8 @@ public interface DriverLocationService {
                                                      double endPlaceLatitude,
                                                      double endPlaceLongitude,
                                                      double mileage);
+
+    public void updateOrderLocationCache(Map param);
+    public HashMap searchOrderLocationCache(long orderId);
 }
 
