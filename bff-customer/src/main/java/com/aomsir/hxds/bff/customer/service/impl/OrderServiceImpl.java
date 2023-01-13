@@ -179,4 +179,11 @@ public class OrderServiceImpl implements OrderService {
         String result = MapUtil.getStr(r, "result");
         return result;
     }
+
+    @Override
+    public HashMap hasCustomerCurrentOrder(HasCustomerCurrentOrderForm form) {
+        R r = this.odrServiceApi.hasCustomerCurrentOrder(form);
+        HashMap map = (HashMap) r.get("result");
+        return map;
+    }
 }

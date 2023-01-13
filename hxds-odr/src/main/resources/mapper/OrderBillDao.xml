@@ -17,4 +17,11 @@
             exceed_return_price = #{exceedReturnPrice}
     </insert>
 
+    <delete id="deleteUnAcceptOrderBill" parameterType="long">
+        DELETE
+        FROM tb_order_bill
+        WHERE order_id = #{orderId};
+    </delete>
+
+
 </mapper>

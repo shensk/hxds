@@ -109,4 +109,21 @@ public class OrderController {
         return R.ok()
                 .put("result", result);
     }
+
+    @PostMapping("/searchDriverCurrentOrder")
+    @Operation(summary = "查询司机当前订单")
+    public R searchDriverCurrentOrder(@RequestBody @Valid SearchDriverCurrentOrderForm form) {
+        HashMap map = this.orderService.searchDriverCurrentOrder(form.getDriverId());
+        return R.ok()
+                .put("result", map);
+    }
+
+
+    @PostMapping("/hasCustomerCurrentOrder")
+    @Operation(summary = "查询乘客是否存在当前的订单")
+    public R hasCustomerCurrentOrder(@RequestBody @Valid HasCustomerCurrentOrderForm form) {
+        HashMap map = this.orderService.hasCustomerCurrentOrder(form.getCustomerId());
+        return R.ok()
+                .put("result", map);
+    }
 }

@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import com.aomsir.hxds.bff.customer.controller.form.CreateNewOrderForm;
 import com.aomsir.hxds.bff.customer.controller.form.DeleteUnAcceptOrderForm;
+import com.aomsir.hxds.bff.customer.controller.form.HasCustomerCurrentOrderForm;
 import com.aomsir.hxds.bff.customer.controller.form.SearchOrderStatusForm;
 import com.aomsir.hxds.bff.customer.service.OrderService;
 import com.aomsir.hxds.common.util.R;
@@ -57,6 +58,18 @@ public class OrderController {
         String result = this.orderService.deleteUnAcceptOrder(form);
         return R.ok()
                 .put("result", result);
+    }
+
+    @PostMapping("/hasCustomerCurrentOrder")
+    @SaCheckLogin
+    @Operation(summary = "查询乘客是否存在当前的订单")
+    public R hasCustomerCurrentOrder() {
+        long customerId = StpUtil.getLoginIdAsLong();
+        HasCustomerCurrentOrderForm form=new HasCustomerCurrentOrderForm();
+        form.setCustomerId(customerId);
+        HashMap map = this.orderService.hasCustomerCurrentOrder(form);
+        return R.ok()
+                .put("result", map);
     }
 }
 

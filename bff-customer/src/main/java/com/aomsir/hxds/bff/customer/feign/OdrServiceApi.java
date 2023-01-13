@@ -1,6 +1,7 @@
 package com.aomsir.hxds.bff.customer.feign;
 
 import com.aomsir.hxds.bff.customer.controller.form.DeleteUnAcceptOrderForm;
+import com.aomsir.hxds.bff.customer.controller.form.HasCustomerCurrentOrderForm;
 import com.aomsir.hxds.bff.customer.controller.form.InsertOrderForm;
 import com.aomsir.hxds.bff.customer.controller.form.SearchOrderStatusForm;
 import com.aomsir.hxds.common.util.R;
@@ -18,5 +19,8 @@ public interface OdrServiceApi {
 
     @PostMapping("/order/deleteUnAcceptOrder")
     public R deleteUnAcceptOrder(DeleteUnAcceptOrderForm form);
+
+    @PostMapping("/order/hasCustomerCurrentOrder")
+    public R hasCustomerCurrentOrder(HasCustomerCurrentOrderForm form);
 
 }
