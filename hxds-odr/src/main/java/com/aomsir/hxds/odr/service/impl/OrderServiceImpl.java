@@ -182,5 +182,11 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
+    @Override
+    public HashMap searchOrderForMoveById(Map param) {
+        HashMap map = this.orderDao.searchOrderForMoveById(param);
+        return map;
+    }
+
 
 }

@@ -135,4 +135,23 @@
           AND `status` = 1 LIMIT 1;
     </select>
 
+    <!--查询订单移动状态、司乘同显-->
+    <select id="searchOrderForMoveById" parameterType="Map" resultType="HashMap">
+        SELECT start_place AS startPlace,
+        start_place_location AS startPlaceLocation,
+        end_place AS endPlace,
+        end_place_location AS endPlaceLocation,
+        `status`
+        FROM tb_order
+        WHERE id = #{orderId}
+        <if test="customerId!=null">
+            AND customer_id = #{customerId}
+        </if>
+        <if test="driverId!=null">
+            AND driver_id = #{driverId}
+        </if>
+        LIMIT 1;
+    </select>
+
+
 </mapper>

@@ -23,6 +23,8 @@ public interface OrderDao {
 
     public Long hasCustomerUnFinishedOrder(long customerId);
     public HashMap hasCustomerUnAcceptOrder(long customerId);
+
+    public HashMap searchOrderForMoveById(Map param);
 }
 
 

@@ -1,10 +1,7 @@
 package com.aomsir.hxds.bff.driver.service.impl;
 
 import cn.hutool.core.map.MapUtil;
-import com.aomsir.hxds.bff.driver.controller.form.AcceptNewOrderForm;
-import com.aomsir.hxds.bff.driver.controller.form.SearchCustomerInfoInOrderForm;
-import com.aomsir.hxds.bff.driver.controller.form.SearchDriverCurrentOrderForm;
-import com.aomsir.hxds.bff.driver.controller.form.SearchDriverExecuteOrderForm;
+import com.aomsir.hxds.bff.driver.controller.form.*;
 import com.aomsir.hxds.bff.driver.feign.CstServiceApi;
 import com.aomsir.hxds.bff.driver.feign.OdrServiceApi;
 import com.aomsir.hxds.bff.driver.service.OrderService;
@@ -72,5 +69,12 @@ public class OrderServiceImpl implements OrderService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public HashMap searchOrderForMoveById(SearchOrderForMoveByIdForm form) {
+        R r = this.odrServiceApi.searchOrderForMoveById(form);
+        HashMap map = (HashMap) r.get("result");
+        return map;
     }
 }

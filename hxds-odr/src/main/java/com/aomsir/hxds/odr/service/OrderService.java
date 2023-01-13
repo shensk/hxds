@@ -19,4 +19,6 @@ public interface OrderService {
 
     public HashMap searchDriverCurrentOrder(long driverId);
     public HashMap hasCustomerCurrentOrder(long customerId);
+
+    public HashMap searchOrderForMoveById(Map param);
 }
