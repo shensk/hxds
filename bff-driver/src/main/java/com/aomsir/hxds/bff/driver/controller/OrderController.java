@@ -2,10 +2,7 @@ package com.aomsir.hxds.bff.driver.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
-import com.aomsir.hxds.bff.driver.controller.form.AcceptNewOrderForm;
-import com.aomsir.hxds.bff.driver.controller.form.SearchDriverCurrentOrderForm;
-import com.aomsir.hxds.bff.driver.controller.form.SearchDriverExecuteOrderForm;
-import com.aomsir.hxds.bff.driver.controller.form.SearchOrderForMoveByIdForm;
+import com.aomsir.hxds.bff.driver.controller.form.*;
 import com.aomsir.hxds.bff.driver.service.OrderService;
 import com.aomsir.hxds.common.util.R;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,5 +69,16 @@ public class OrderController {
         HashMap map = this.orderService.searchOrderForMoveById(form);
         return R.ok()
                 .put("result", map);
+    }
+
+    @PostMapping("/arriveStartPlace")
+    @Operation(summary = "司机到达上车点")
+    @SaCheckLogin
+    public R arriveStartPlace(@RequestBody @Valid ArriveStartPlaceForm form) {
+        long driverId = StpUtil.getLoginIdAsLong();
+        form.setDriverId(driverId);
+        int rows = this.orderService.arriveStartPlace(form);
+        return R.ok()
+                .put("rows", rows);
     }
 }

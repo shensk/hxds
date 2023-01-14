@@ -1,9 +1,6 @@
 package com.aomsir.hxds.bff.driver.service;
 
-import com.aomsir.hxds.bff.driver.controller.form.AcceptNewOrderForm;
-import com.aomsir.hxds.bff.driver.controller.form.SearchDriverCurrentOrderForm;
-import com.aomsir.hxds.bff.driver.controller.form.SearchDriverExecuteOrderForm;
-import com.aomsir.hxds.bff.driver.controller.form.SearchOrderForMoveByIdForm;
+import com.aomsir.hxds.bff.driver.controller.form.*;
 
 import java.util.HashMap;
 
@@ -14,4 +11,6 @@ public interface OrderService {
     public HashMap searchOrderForMoveById(SearchOrderForMoveByIdForm form);
 
     public HashMap searchDriverCurrentOrder(SearchDriverCurrentOrderForm form);
+
+    public int arriveStartPlace(ArriveStartPlaceForm form);
 }

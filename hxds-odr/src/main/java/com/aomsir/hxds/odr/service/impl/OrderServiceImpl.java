@@ -189,4 +189,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int arriveStartPlace(Map param) {
+        //添加到达上车点标志位
+        long orderId = MapUtil.getLong(param, "orderId");
+        this.redisTemplate.opsForValue().set("order_driver_arrivied#" + orderId, "1");
+        int rows = this.orderDao.updateOrderStatus(param);
+        if (rows != 1) {
+            throw new HxdsException("更新订单状态失败");
+        }
+        return rows;
+    }
+
+
 }

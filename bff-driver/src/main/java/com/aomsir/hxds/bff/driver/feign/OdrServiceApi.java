@@ -22,4 +22,7 @@ public interface OdrServiceApi {
 
     @PostMapping("/order/searchOrderForMoveById")
     public R searchOrderForMoveById(SearchOrderForMoveByIdForm form);
+
+    @PostMapping("/order/arriveStartPlace")
+    public R arriveStartPlace(ArriveStartPlaceForm form);
 }

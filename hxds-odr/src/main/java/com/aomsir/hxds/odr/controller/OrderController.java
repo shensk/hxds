@@ -136,4 +136,14 @@ public class OrderController {
         return R.ok()
                 .put("result", map);
     }
+
+
+    @PostMapping("/arriveStartPlace")
+    @Operation(summary = "司机到达上车点")
+    public R arriveStartPlace(@RequestBody @Valid ArriveStartPlaceForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        param.put("status", 3);
+        int rows = this.orderService.arriveStartPlace(param);
+        return R.ok().put("rows", rows);
+    }
 }
