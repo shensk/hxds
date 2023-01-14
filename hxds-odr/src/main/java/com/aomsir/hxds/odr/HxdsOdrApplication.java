@@ -29,7 +29,6 @@ public class HxdsOdrApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(HxdsOdrApplication.class, args);
-
     }
 
 }

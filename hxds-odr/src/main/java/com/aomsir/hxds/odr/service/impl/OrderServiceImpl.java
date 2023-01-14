@@ -8,6 +8,8 @@ import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
 import com.aomsir.hxds.odr.db.pojo.OrderEntity;
 import com.aomsir.hxds.odr.service.OrderService;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
     @Resource
     private OrderDao orderDao;
 
@@ -194,7 +197,7 @@ public class OrderServiceImpl implements OrderService {
     public int arriveStartPlace(Map param) {
         //添加到达上车点标志位
         long orderId = MapUtil.getLong(param, "orderId");
-        this.redisTemplate.opsForValue().set("order_driver_arrivied#" + orderId, "1");
+        this.redisTemplate.opsForValue().set("order_driver_arrived#" + orderId, "1");
         int rows = this.orderDao.updateOrderStatus(param);
         if (rows != 1) {
             throw new HxdsException("更新订单状态失败");
@@ -205,7 +208,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean confirmArriveStartPlace(long orderId) {
-        String key = "order_driver_arrivied#" + orderId;
+        String key = "order_driver_arrived#" + orderId;
         if (this.redisTemplate.hasKey(key)
                 && this.redisTemplate.opsForValue().get(key).toString().endsWith("1")) {
             this.redisTemplate.opsForValue().set(key, "2");

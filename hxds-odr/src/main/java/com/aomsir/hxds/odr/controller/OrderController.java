@@ -144,7 +144,8 @@ public class OrderController {
         Map param = BeanUtil.beanToMap(form);
         param.put("status", 3);
         int rows = this.orderService.arriveStartPlace(param);
-        return R.ok().put("rows", rows);
+        return R.ok()
+                .put("rows", rows);
     }
 
     @PostMapping("/confirmArriveStartPlace")

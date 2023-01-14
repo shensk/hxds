@@ -20,6 +20,9 @@ public interface OdrServiceApi {
     @PostMapping("/order/hasCustomerCurrentOrder")
     public R hasCustomerCurrentOrder(HasCustomerCurrentOrderForm form);
 
+    @PostMapping("/order/searchOrderForMoveById")
+    public R searchOrderForMoveById(SearchOrderForMoveByIdForm form);
+
     @PostMapping("/order/confirmArriveStartPlace")
     public R confirmArriveStartPlace(ConfirmArriveStartPlaceForm form);
 

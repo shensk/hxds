@@ -193,4 +193,12 @@ public class OrderServiceImpl implements OrderService {
         boolean result = MapUtil.getBool(r, "result");
         return result;
     }
+
+
+    @Override
+    public HashMap searchOrderForMoveById(SearchOrderForMoveByIdForm form) {
+        R r = this.odrServiceApi.searchOrderForMoveById(form);
+        HashMap map = (HashMap) r.get("result");
+        return map;
+    }
 }
