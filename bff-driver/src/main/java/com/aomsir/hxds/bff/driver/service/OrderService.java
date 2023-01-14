@@ -13,4 +13,6 @@ public interface OrderService {
     public HashMap searchDriverCurrentOrder(SearchDriverCurrentOrderForm form);
 
     public int arriveStartPlace(ArriveStartPlaceForm form);
+
+    public int startDriving(StartDrivingForm form);
 }

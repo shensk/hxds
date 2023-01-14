@@ -89,4 +89,14 @@ public class OrderServiceImpl implements OrderService {
         }
         return rows;
     }
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int startDriving(StartDrivingForm form) {
+        R r = this.odrServiceApi.startDriving(form);
+        int rows = MapUtil.getInt(r, "rows");
+        //TODO 发送通知消息
+        return rows;
+    }
 }

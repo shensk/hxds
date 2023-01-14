@@ -25,4 +25,7 @@ public interface OdrServiceApi {
 
     @PostMapping("/order/arriveStartPlace")
     public R arriveStartPlace(ArriveStartPlaceForm form);
+
+    @PostMapping("/order/startDriving")
+    public R startDriving(StartDrivingForm form);
 }

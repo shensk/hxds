@@ -155,4 +155,14 @@ public class OrderController {
         return R.ok()
                 .put("result", result);
     }
+
+    @PostMapping("/startDriving")
+    @Operation(summary = "开始代驾")
+    public R startDriving(@RequestBody @Valid StartDrivingForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        param.put("status", 4);
+        int rows = this.orderService.startDriving(param);
+        return R.ok()
+                .put("rows", rows);
+    }
 }

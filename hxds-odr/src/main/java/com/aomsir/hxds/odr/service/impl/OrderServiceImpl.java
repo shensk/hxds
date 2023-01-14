@@ -216,4 +216,22 @@ public class OrderServiceImpl implements OrderService {
         }
         return false;
     }
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int startDriving(Map param) {
+        long orderId = MapUtil.getLong(param, "orderId");
+        String key = "order_driver_arrived#" + orderId;
+        if (this.redisTemplate.hasKey(key)
+                && redisTemplate.opsForValue().get(key).toString().endsWith("2")) {
+            this.redisTemplate.delete(key);
+            int rows = orderDao.updateOrderStatus(param);
+            if (rows != 1) {
+                throw new HxdsException("更新订单状态失败");
+            }
+            return rows;
+        }
+        return 0;
+    }
 }
