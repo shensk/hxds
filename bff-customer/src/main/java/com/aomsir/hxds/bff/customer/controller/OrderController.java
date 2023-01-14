@@ -2,10 +2,7 @@ package com.aomsir.hxds.bff.customer.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
-import com.aomsir.hxds.bff.customer.controller.form.CreateNewOrderForm;
-import com.aomsir.hxds.bff.customer.controller.form.DeleteUnAcceptOrderForm;
-import com.aomsir.hxds.bff.customer.controller.form.HasCustomerCurrentOrderForm;
-import com.aomsir.hxds.bff.customer.controller.form.SearchOrderStatusForm;
+import com.aomsir.hxds.bff.customer.controller.form.*;
 import com.aomsir.hxds.bff.customer.service.OrderService;
 import com.aomsir.hxds.common.util.R;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,6 +67,15 @@ public class OrderController {
         HashMap map = this.orderService.hasCustomerCurrentOrder(form);
         return R.ok()
                 .put("result", map);
+    }
+
+    @PostMapping("/confirmArriveStartPlace")
+    @SaCheckLogin
+    @Operation(summary = "确定司机已经到达")
+    public R confirmArriveStartPlace(@RequestBody @Valid ConfirmArriveStartPlaceForm form) {
+        boolean result = this.orderService.confirmArriveStartPlace(form);
+        return R.ok()
+                .put("result", result);
     }
 }
 

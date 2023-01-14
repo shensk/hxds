@@ -23,4 +23,6 @@ public interface OrderService {
     public HashMap searchOrderForMoveById(Map param);
 
     public int arriveStartPlace(Map param);
+
+    public boolean confirmArriveStartPlace(long orderId);
 }

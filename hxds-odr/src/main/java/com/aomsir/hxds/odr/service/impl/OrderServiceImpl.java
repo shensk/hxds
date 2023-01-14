@@ -188,8 +188,6 @@ public class OrderServiceImpl implements OrderService {
         return map;
     }
 
-
-
     @Override
     @Transactional
     @LcnTransaction
@@ -205,4 +203,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+    @Override
+    public boolean confirmArriveStartPlace(long orderId) {
+        String key = "order_driver_arrivied#" + orderId;
+        if (this.redisTemplate.hasKey(key)
+                && this.redisTemplate.opsForValue().get(key).toString().endsWith("1")) {
+            this.redisTemplate.opsForValue().set(key, "2");
+            return true;
+        }
+        return false;
+    }
 }

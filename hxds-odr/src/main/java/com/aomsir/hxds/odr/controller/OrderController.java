@@ -146,4 +146,12 @@ public class OrderController {
         int rows = this.orderService.arriveStartPlace(param);
         return R.ok().put("rows", rows);
     }
+
+    @PostMapping("/confirmArriveStartPlace")
+    @Operation(summary = "乘客确认司机到达上车点")
+    public R confirmArriveStartPlace(@RequestBody @Valid ConfirmArriveStartPlaceForm form) {
+        boolean result = this.orderService.confirmArriveStartPlace(form.getOrderId());
+        return R.ok()
+                .put("result", result);
+    }
 }
