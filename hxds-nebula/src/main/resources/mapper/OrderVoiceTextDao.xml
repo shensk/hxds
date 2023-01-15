@@ -3,5 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aomsir.hxds.nebula.db.dao.OrderVoiceTextDao">
+    <insert id="insert" parameterType="com.aomsir.hxds.nebula.db.pojo.OrderVoiceTextEntity">
+        UPSERT INTO hxds.order_voice_text("id", "uuid", "order_id", "record_file", "text", "create_time")
+        VALUES(NEXT VALUE FOR hxds.ovt_sequence, '${uuid}', #{orderId}, '${recordFile}', '${text}', NOW())
+    </insert>
+
+
 
 </mapper>
