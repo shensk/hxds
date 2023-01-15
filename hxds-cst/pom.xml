@@ -151,7 +151,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.7.RELEASE</version>
                 <configuration>
-                    <mainClass>com.example.hxds.cst.HxdsCstApplication</mainClass>
+                    <mainClass>com.aomsir.hxds.cst.HxdsCstApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

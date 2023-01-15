@@ -234,4 +234,15 @@ public class OrderServiceImpl implements OrderService {
         }
         return 0;
     }
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int updateOrderStatus(Map param) {
+        int rows = this.orderDao.updateOrderStatus(param);
+        if (rows != 1) {
+            throw new HxdsException("更新取消订单记录失败");
+        }
+        return rows;
+    }
 }

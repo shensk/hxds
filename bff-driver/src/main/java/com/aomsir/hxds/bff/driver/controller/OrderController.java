@@ -92,4 +92,13 @@ public class OrderController {
         return R.ok()
                 .put("rows", rows);
     }
+
+    @PostMapping("/updateOrderStatus")
+    @SaCheckLogin
+    @Operation(summary = "更新订单状态")
+    public R updateOrderStatus(@RequestBody @Valid UpdateOrderStatusForm form) {
+        int rows = this.orderService.updateOrderStatus(form);
+        return R.ok()
+                .put("rows", rows);
+    }
 }

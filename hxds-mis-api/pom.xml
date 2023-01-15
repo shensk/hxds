@@ -180,7 +180,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.7.RELEASE</version>
                 <configuration>
-                    <mainClass>com.example.hxds.mis.api.HxdsMisApiApplication</mainClass>
+                    <mainClass>com.aomsir.hxds.mis.api.HxdsMisApiApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

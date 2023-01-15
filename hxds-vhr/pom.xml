@@ -156,7 +156,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.7.RELEASE</version>
                 <configuration>
-                    <mainClass>com.example.hxds.vhr.HxdsVhrApplication</mainClass>
+                    <mainClass>com.aomsir.hxds.vhr.HxdsVhrApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

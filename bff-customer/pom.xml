@@ -177,7 +177,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.7.RELEASE</version>
                 <configuration>
-                    <mainClass>com.example.hxds.bff.customer.BffCustomerApplication</mainClass>
+                    <mainClass>com.aomsir.hxds.bff.customer.BffCustomerApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

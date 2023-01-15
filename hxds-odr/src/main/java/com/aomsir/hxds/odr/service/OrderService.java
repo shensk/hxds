@@ -27,4 +27,6 @@ public interface OrderService {
     public boolean confirmArriveStartPlace(long orderId);
 
     public int startDriving(Map param);
+
+    public int updateOrderStatus(Map param);
 }
