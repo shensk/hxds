@@ -3,6 +3,7 @@ package com.aomsir.hxds.bff.driver.service.impl;
 import cn.hutool.core.map.MapUtil;
 import com.aomsir.hxds.bff.driver.controller.form.*;
 import com.aomsir.hxds.bff.driver.feign.CstServiceApi;
+import com.aomsir.hxds.bff.driver.feign.NebulaServiceApi;
 import com.aomsir.hxds.bff.driver.feign.OdrServiceApi;
 import com.aomsir.hxds.bff.driver.service.OrderService;
 import com.aomsir.hxds.common.util.R;
@@ -21,6 +22,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private CstServiceApi cstServiceApi;
+
+    @Resource
+    private NebulaServiceApi nebulaServiceApi;
 
     @Override
     @LcnTransaction
@@ -96,7 +100,12 @@ public class OrderServiceImpl implements OrderService {
     public int startDriving(StartDrivingForm form) {
         R r = this.odrServiceApi.startDriving(form);
         int rows = MapUtil.getInt(r, "rows");
-        //TODO 发送通知消息
+        if(rows==1){
+            InsertOrderMonitoringForm monitoringForm = new InsertOrderMonitoringForm();
+            monitoringForm.setOrderId(form.getOrderId());
+            this.nebulaServiceApi.insertOrderMonitoring(monitoringForm);
+            //TODO 发送通知消息
+        }
         return rows;
     }
 

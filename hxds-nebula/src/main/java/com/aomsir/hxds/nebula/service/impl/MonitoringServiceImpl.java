@@ -2,9 +2,11 @@ package com.aomsir.hxds.nebula.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.aomsir.hxds.common.exception.HxdsException;
+import com.aomsir.hxds.nebula.db.dao.OrderMonitoringDao;
 import com.aomsir.hxds.nebula.db.dao.OrderVoiceTextDao;
 import com.aomsir.hxds.nebula.db.pojo.OrderVoiceTextEntity;
 import com.aomsir.hxds.nebula.service.MonitoringService;
+import com.aomsir.hxds.nebula.task.VoiceTextCheckTask;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,12 @@ import javax.annotation.Resource;
 public class MonitoringServiceImpl implements MonitoringService {
     @Resource
     private OrderVoiceTextDao orderVoiceTextDao;
+
+    @Resource
+    private OrderMonitoringDao orderMonitoringDao;
+
+    @Resource
+    private VoiceTextCheckTask voiceTextCheckTask;
 
     @Value("${minio.endpoint}")
     private String endpoint;
@@ -63,7 +71,17 @@ public class MonitoringServiceImpl implements MonitoringService {
             throw new HxdsException("保存录音文稿失败");
         }
 
-        //TODO 执行文稿内容审查
+        // 执行文稿内容审查
+        this.voiceTextCheckTask.checkText(orderId, text, uuid);
+    }
 
+    @Override
+    @Transactional
+    public int insertOrderMonitoring(long orderId) {
+        int rows = this.orderMonitoringDao.insert(orderId);
+        if (rows != 1) {
+            throw new HxdsException("添加订单监控摘要记录失败");
+        }
+        return rows;
     }
 }

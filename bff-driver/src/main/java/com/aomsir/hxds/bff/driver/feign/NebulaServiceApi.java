@@ -1,6 +1,7 @@
 package com.aomsir.hxds.bff.driver.feign;
 
 import com.aomsir.hxds.bff.driver.config.MultipartSupportConfig;
+import com.aomsir.hxds.bff.driver.controller.form.InsertOrderMonitoringForm;
 import com.aomsir.hxds.common.util.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -16,4 +17,6 @@ public interface NebulaServiceApi {
                               @RequestPart("name") String name,
                               @RequestPart(value = "text", required = false) String text);
 
+    @PostMapping(value = "/monitoring/insertOrderMonitoring")
+    public R insertOrderMonitoring(InsertOrderMonitoringForm form);
 }

@@ -32,7 +32,7 @@ spring:
         group: DEFAULT_GROUP
   datasource:
     driver-class-name: org.apache.phoenix.queryserver.client.Driver
-    url: jdbc:phoenix:thin:url=http://192.168.212.144:8765;serialization=PROTOBUF
+    url: jdbc:phoenix:thin:url=http://39.101.68.107:8765;serialization=PROTOBUF
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       test-while-idle: true
