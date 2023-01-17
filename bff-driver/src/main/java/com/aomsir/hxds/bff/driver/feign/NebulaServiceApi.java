@@ -1,6 +1,7 @@
 package com.aomsir.hxds.bff.driver.feign;
 
 import com.aomsir.hxds.bff.driver.config.MultipartSupportConfig;
+import com.aomsir.hxds.bff.driver.controller.form.InsertOrderGpsForm;
 import com.aomsir.hxds.bff.driver.controller.form.InsertOrderMonitoringForm;
 import com.aomsir.hxds.common.util.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,4 +20,7 @@ public interface NebulaServiceApi {
 
     @PostMapping(value = "/monitoring/insertOrderMonitoring")
     public R insertOrderMonitoring(InsertOrderMonitoringForm form);
+
+    @PostMapping("/order/gps/insertOrderGps")
+    public R insertOrderGps(InsertOrderGpsForm form);
 }

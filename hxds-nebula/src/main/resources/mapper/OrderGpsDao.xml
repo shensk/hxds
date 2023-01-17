@@ -4,4 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aomsir.hxds.nebula.db.dao.OrderGpsDao">
 
+    <insert id="insert" parameterType="com.aomsir.hxds.nebula.db.pojo.OrderGpsEntity">
+        UPSERT INTO hxds.order_gps("id", "order_id", "driver_id", "customer_id", "latitude", "longitude", "speed", "create_time")
+        VALUES(NEXT VALUE FOR hxds.og_sequence, ${orderId}, ${driverId}, ${customerId}, '${latitude}', '${longitude}', '${speed}', NOW())
+    </insert>
+
+
 </mapper>
