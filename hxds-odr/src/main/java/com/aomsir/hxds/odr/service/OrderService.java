@@ -1,5 +1,6 @@
 package com.aomsir.hxds.odr.service;
 
+import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
 import com.aomsir.hxds.odr.db.pojo.OrderEntity;
 
@@ -29,4 +30,6 @@ public interface OrderService {
     public int startDriving(Map param);
 
     public int updateOrderStatus(Map param);
+
+    public PageUtils searchOrderByPage(Map param);
 }

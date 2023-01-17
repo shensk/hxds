@@ -2,6 +2,7 @@ package com.aomsir.hxds.odr.service.impl;
 
 import cn.hutool.core.map.MapUtil;
 import com.aomsir.hxds.common.exception.HxdsException;
+import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.odr.db.dao.OrderBillDao;
 import com.aomsir.hxds.odr.db.dao.OrderDao;
 import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -244,5 +246,20 @@ public class OrderServiceImpl implements OrderService {
             throw new HxdsException("更新取消订单记录失败");
         }
         return rows;
+    }
+
+    @Override
+    public PageUtils searchOrderByPage(Map param) {
+        long count = this.orderDao.searchOrderCount(param);
+        ArrayList<HashMap> list = null;
+        if (count == 0) {
+            list = new ArrayList<>();
+        } else {
+            list = this.orderDao.searchOrderByPage(param);
+        }
+        int start = (Integer) param.get("start");
+        int length = (Integer) param.get("length");
+        PageUtils pageUtils = new PageUtils(list, count, start, length);
+        return pageUtils;
     }
 }

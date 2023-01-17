@@ -27,6 +27,10 @@ public interface OrderDao {
     public HashMap searchOrderForMoveById(Map param);
 
     public int updateOrderStatus(Map param);
+
+    public long searchOrderCount(Map param);
+
+    public ArrayList<HashMap> searchOrderByPage(Map param);
 }
 
 

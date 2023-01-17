@@ -2,6 +2,7 @@ package com.aomsir.hxds.odr.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONObject;
+import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.odr.controller.form.*;
 import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
@@ -173,6 +174,19 @@ public class OrderController {
         int rows = this.orderService.updateOrderStatus(param);
         return R.ok()
                 .put("rows", rows);
+    }
+
+    @PostMapping("/searchOrderByPage")
+    @Operation(summary = "查询订单分页记录")
+    public R searchOrderByPage(@RequestBody @Valid SearchOrderByPageForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int page = form.getPage();
+        int length = form.getLength();
+        int start = (page - 1) * length;
+        param.put("start", start);
+        PageUtils pageUtils = this.orderService.searchOrderByPage(param);
+        return R.ok()
+                .put("result", pageUtils);
     }
 
 }
