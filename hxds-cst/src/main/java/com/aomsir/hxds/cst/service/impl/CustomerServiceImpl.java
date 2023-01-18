@@ -67,4 +67,10 @@ public class CustomerServiceImpl implements CustomerService {
         HashMap map = this.customerDao.searchCustomerInfoInOrder(customerId);
         return map;
     }
+
+    @Override
+    public HashMap searchCustomerBriefInfo(long customerId) {
+        HashMap map = this.customerDao.searchCustomerBriefInfo(customerId);
+        return map;
+    }
 }

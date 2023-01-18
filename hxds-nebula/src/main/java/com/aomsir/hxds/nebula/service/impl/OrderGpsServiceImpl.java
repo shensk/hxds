@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @Service
 public class OrderGpsServiceImpl implements OrderGpsService {
@@ -23,5 +24,17 @@ public class OrderGpsServiceImpl implements OrderGpsService {
             rows += this.orderGpsDao.insert(entity);
         }
         return rows;
+    }
+
+    @Override
+    public ArrayList<HashMap> searchOrderGps(long orderId) {
+        ArrayList<HashMap> list = this.orderGpsDao.searchOrderGps(orderId);
+        return list;
+    }
+
+    @Override
+    public HashMap searchOrderLastGps(long orderId) {
+        HashMap map = this.orderGpsDao.searchOrderLastGps(orderId);
+        return map;
     }
 }

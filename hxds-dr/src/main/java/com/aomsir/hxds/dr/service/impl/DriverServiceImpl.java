@@ -208,4 +208,10 @@ public class DriverServiceImpl implements DriverService {
         int rows = this.driverDao.updateDriverRealAuth(param);
         return rows;
     }
+
+    @Override
+    public HashMap searchDriverBriefInfo(long driverId) {
+        HashMap map = this.driverDao.searchDriverBriefInfo(driverId);
+        return map;
+    }
 }

@@ -8,4 +8,5 @@ public interface CustomerService {
 
     public String login(String code);
     public HashMap searchCustomerInfoInOrder(long customerId);
+    public HashMap searchCustomerBriefInfo(long customerId);
 }

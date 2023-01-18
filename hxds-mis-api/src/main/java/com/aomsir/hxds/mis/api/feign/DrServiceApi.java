@@ -1,6 +1,7 @@
 package com.aomsir.hxds.mis.api.feign;
 
 import com.aomsir.hxds.common.util.R;
+import com.aomsir.hxds.mis.api.controller.form.SearchDriverBriefInfoForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchDriverByPageForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchDriverRealSummaryForm;
 import com.aomsir.hxds.mis.api.controller.form.UpdateDriverRealAuthForm;
@@ -18,4 +19,7 @@ public interface DrServiceApi {
 
     @PostMapping("/driver/updateDriverRealAuth")
     public R updateDriverRealAuth(UpdateDriverRealAuthForm form);
+
+    @PostMapping("/driver/searchDriverBriefInfo")
+    public R searchDriverBriefInfo(SearchDriverBriefInfoForm form);
 }

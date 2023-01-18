@@ -31,6 +31,8 @@ public interface OrderDao {
     public long searchOrderCount(Map param);
 
     public ArrayList<HashMap> searchOrderByPage(Map param);
+
+    public HashMap searchOrderContent(long orderId);
 }
 
 

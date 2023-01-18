@@ -1,6 +1,8 @@
 package com.aomsir.hxds.odr.service.impl;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.aomsir.hxds.common.exception.HxdsException;
 import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.odr.db.dao.OrderBillDao;
@@ -261,5 +263,16 @@ public class OrderServiceImpl implements OrderService {
         int length = (Integer) param.get("length");
         PageUtils pageUtils = new PageUtils(list, count, start, length);
         return pageUtils;
+    }
+
+    @Override
+    public HashMap searchOrderContent(long orderId) {
+        HashMap map = this.orderDao.searchOrderContent(orderId);
+        JSONObject startPlaceLocation = JSONUtil.parseObj(MapUtil.getStr(map, "startPlaceLocation"));
+        JSONObject endPlaceLocation = JSONUtil.parseObj(MapUtil.getStr(map, "endPlaceLocation"));
+
+        map.replace("startPlaceLocation", startPlaceLocation);
+        map.replace("endPlaceLocation", endPlaceLocation);
+        return map;
     }
 }

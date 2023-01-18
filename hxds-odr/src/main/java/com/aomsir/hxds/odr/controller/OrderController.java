@@ -189,4 +189,12 @@ public class OrderController {
                 .put("result", pageUtils);
     }
 
+    @PostMapping("/searchOrderContent")
+    @Operation(summary = "查询订单详情")
+    public R searchOrderContent(@RequestBody @Valid SearchOrderContentForm form) {
+        Map map = this.orderService.searchOrderContent(form.getOrderId());
+        return R.ok()
+                .put("result", map);
+    }
+
 }

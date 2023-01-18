@@ -32,4 +32,6 @@ public interface OrderService {
     public int updateOrderStatus(Map param);
 
     public PageUtils searchOrderByPage(Map param);
+
+    public HashMap searchOrderContent(long orderId);
 }
