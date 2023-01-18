@@ -275,4 +275,24 @@ public class OrderServiceImpl implements OrderService {
         map.replace("endPlaceLocation", endPlaceLocation);
         return map;
     }
+
+    @Override
+    public ArrayList<HashMap> searchOrderStartLocationIn30Days() {
+        ArrayList<String> list = this.orderDao.searchOrderStartLocationIn30Days();
+        ArrayList<HashMap> result = new ArrayList<>();
+        list.forEach(location -> {
+            JSONObject json = JSONUtil.parseObj(location);
+            String latitude = json.getStr("latitude");
+            String longitude = json.getStr("longitude");
+            latitude = latitude.substring(0, latitude.length() - 4);
+            latitude += "0001";
+            longitude = longitude.substring(0, longitude.length() - 4);
+            longitude += "0001";
+            HashMap map = new HashMap();
+            map.put("latitude", latitude);
+            map.put("longitude", longitude);
+            result.add(map);
+        });
+        return result;
+    }
 }

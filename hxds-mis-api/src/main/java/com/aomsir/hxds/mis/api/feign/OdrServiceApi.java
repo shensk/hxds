@@ -3,6 +3,7 @@ package com.aomsir.hxds.mis.api.feign;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.mis.api.controller.form.SearchOrderByPageForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchOrderContentForm;
+import com.aomsir.hxds.mis.api.controller.form.SearchOrderStatusForm;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -14,5 +15,11 @@ public interface OdrServiceApi {
 
     @PostMapping("/order/searchOrderContent")
     public R searchOrderContent(SearchOrderContentForm form);
+
+    @PostMapping("/order/searchOrderStatus")
+    public R searchOrderStatus(SearchOrderStatusForm form);
+
+    @PostMapping("/order/searchOrderStartLocationIn30Days")
+    public R searchOrderStartLocationIn30Days();
 }
 

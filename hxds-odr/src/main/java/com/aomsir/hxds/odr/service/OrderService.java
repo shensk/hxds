@@ -4,6 +4,7 @@ import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
 import com.aomsir.hxds.odr.db.pojo.OrderEntity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,4 +35,6 @@ public interface OrderService {
     public PageUtils searchOrderByPage(Map param);
 
     public HashMap searchOrderContent(long orderId);
+
+    public ArrayList<HashMap> searchOrderStartLocationIn30Days();
 }
