@@ -274,5 +274,23 @@
     </update>
 
 
+    <!--校验司机关联当前订单-->
+    <select id="validDriverOwnOrder" parameterType="Map" resultType="long">
+        SELECT COUNT(*)
+        FROM tb_order
+        WHERE id = #{orderId}
+          AND driver_id = #{driverId}
+    </select>
+
+    <!--搜索结算需要的数据-->
+    <select id="searchSettlementNeedData" parameterType="long" resultType="HashMap">
+        SELECT DATE_FORMAT(accept_time, '%Y-%m-%d %H:%i:%s') AS acceptTime,
+               DATE_FORMAT(start_time, '%Y-%m-%d %H:%i:%s')  AS startTime,
+               waiting_minute                                AS waitingMinute,
+               CAST(favour_fee AS CHAR)                      AS favourFee
+        FROM tb_order
+        WHERE id = #{orderId};
+    </select>
+
 
 </mapper>

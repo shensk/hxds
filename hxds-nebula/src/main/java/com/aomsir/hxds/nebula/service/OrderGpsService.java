@@ -9,4 +9,6 @@ public interface OrderGpsService {
     public int insertOrderGps(ArrayList<InsertOrderGpsVo> list);
     public ArrayList<HashMap> searchOrderGps(long orderId);
     public HashMap searchOrderLastGps(long orderId);
+
+    public String calculateOrderMileage(long orderId);
 }
