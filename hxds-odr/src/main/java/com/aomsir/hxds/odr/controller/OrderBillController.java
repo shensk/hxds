@@ -1,7 +1,8 @@
-package com.aomsir.hxds.odr.controller.form;
+package com.aomsir.hxds.odr.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.aomsir.hxds.common.util.R;
+import com.aomsir.hxds.odr.controller.form.UpdateBillFeeForm;
 import com.aomsir.hxds.odr.service.OrderBillService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +27,7 @@ public class OrderBillController {
     public R updateBillFee(@RequestBody @Valid UpdateBillFeeForm form) {
         Map param = BeanUtil.beanToMap(form);
         int rows = this.orderBillService.updateBillFee(param);
-        return R.ok().put("rows", rows);
+        return R.ok()
+                .put("rows", rows);
     }
 }
