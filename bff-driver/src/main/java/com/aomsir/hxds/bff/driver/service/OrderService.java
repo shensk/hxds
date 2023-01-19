@@ -17,4 +17,6 @@ public interface OrderService {
     public int startDriving(StartDrivingForm form);
 
     public int updateOrderStatus(UpdateOrderStatusForm form);
+
+    public int updateOrderBill(UpdateBillFeeForm form);
 }

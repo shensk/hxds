@@ -101,4 +101,15 @@ public class OrderController {
         return R.ok()
                 .put("rows", rows);
     }
+
+    @PostMapping("/updateBillFee")
+    @SaCheckLogin
+    @Operation(summary = "更新订单账单费用")
+    public R updateBillFee(@RequestBody @Valid UpdateBillFeeForm form) {
+        long driverId = StpUtil.getLoginIdAsLong();
+        form.setDriverId(driverId);
+        int rows = this.orderService.updateOrderBill(form);
+        return R.ok()
+                .put("rows", rows);
+    }
 }

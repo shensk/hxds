@@ -1,6 +1,7 @@
 package com.aomsir.hxds.bff.driver.feign;
 
 import com.aomsir.hxds.bff.driver.config.MultipartSupportConfig;
+import com.aomsir.hxds.bff.driver.controller.form.CalculateOrderMileageForm;
 import com.aomsir.hxds.bff.driver.controller.form.InsertOrderGpsForm;
 import com.aomsir.hxds.bff.driver.controller.form.InsertOrderMonitoringForm;
 import com.aomsir.hxds.common.util.R;
@@ -23,4 +24,7 @@ public interface NebulaServiceApi {
 
     @PostMapping("/order/gps/insertOrderGps")
     public R insertOrderGps(InsertOrderGpsForm form);
+
+    @PostMapping("/order/gps/calculateOrderMileage")
+    public R calculateOrderMileage(CalculateOrderMileageForm form);
 }
