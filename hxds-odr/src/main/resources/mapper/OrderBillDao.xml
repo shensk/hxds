@@ -17,11 +17,27 @@
             exceed_return_price = #{exceedReturnPrice}
     </insert>
 
+    <!--删除超时未接受的订单-->
     <delete id="deleteUnAcceptOrderBill" parameterType="long">
         DELETE
         FROM tb_order_bill
         WHERE order_id = #{orderId};
     </delete>
+
+    <!--更新订单费用信息-->
+    <update id="updateBillFee" parameterType="Map">
+        UPDATE tb_order_bill
+        SET total         = #{total},
+            mileage_fee   = #{mileageFee},
+            waiting_fee   = #{waitingFee},
+            toll_fee      = #{tollFee},
+            parking_fee   = #{parkingFee},
+            other_fee    = #{otherFee},
+            return_fee    = #{returnFee},
+            incentive_fee = #{incentiveFee}
+        WHERE order_id = #{orderId}
+    </update>
+
 
 
 </mapper>

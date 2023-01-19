@@ -263,5 +263,16 @@
           AND start_time BETWEEN TIMESTAMPADD(DAY,-30, NOW()) AND NOW();
     </select>
 
+    <!--更新订单里程和费用-->
+    <update id="updateOrderMileageAndFee" parameterType="Map">
+        UPDATE tb_order
+        SET real_mileage   = #{realMileage},
+            return_mileage = #{returnMileage},
+            incentive_fee  = #{incentiveFee},
+            real_fee       = #{total}
+        WHERE id = #{orderId}
+    </update>
+
+
 
 </mapper>
