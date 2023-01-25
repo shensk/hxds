@@ -82,4 +82,6 @@ public class MessageDao {
         long rows = result.getDeletedCount();
         return rows;
     }
+
+
 }
