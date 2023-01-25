@@ -11,6 +11,8 @@ import com.aomsir.hxds.bff.driver.service.OrderService;
 import com.aomsir.hxds.common.exception.HxdsException;
 import com.aomsir.hxds.common.util.R;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ import java.util.HashMap;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
     @Resource
     private OdrServiceApi odrServiceApi;
 
@@ -170,6 +173,8 @@ public class OrderServiceImpl implements OrderService {
         form_4.setMileage(mileage);
         form_4.setTime(startTime.split(" ")[1]);
         form_4.setMinute(waitingMinute);
+
+        // TODO: waitingMinute时间未自动更新
         r = this.ruleServiceApi.calculateOrderCharge(form_4);
         map = (HashMap) r.get("result");
         String mileageFee = MapUtil.getStr(map, "mileageFee");
@@ -181,9 +186,11 @@ public class OrderServiceImpl implements OrderService {
         /*
          * 5.计算系统奖励费用
          */
+        // TODO: 执行报错
         CalculateIncentiveFeeForm form_5 = new CalculateIncentiveFeeForm();
         form_5.setDriverId(form.getDriverId());
         form_5.setAcceptTime(acceptTime);
+        log.error("{}", form_5);
         r = this.ruleServiceApi.calculateIncentiveFee(form_5);
         String incentiveFee = (String) r.get("result");
 

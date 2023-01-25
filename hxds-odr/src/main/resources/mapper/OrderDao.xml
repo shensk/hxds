@@ -163,7 +163,7 @@
         </if>
         <if test="status==4">
             start_time = NOW(),
-            waiting_minute = TIMESTAMPDIFF(MINUTE, arrive_time, NOW()),
+            waiting_minute = TIMESTAMPDIFF(MINUTE, accept_time, NOW()),
         </if>
         <if test="status==5">
             end_time = NOW(),

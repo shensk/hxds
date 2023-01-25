@@ -16,3 +16,4 @@ public class CalculateOrderChargeForm {
     @Schema(description = "等时分钟")
     private Integer minute;
 }
+
