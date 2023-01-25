@@ -94,4 +94,13 @@ public class MessageController {
         return R.ok();
     }
 
+
+    @PostMapping("/receiveBillMessage")
+    @Operation(summary = "同步接收新订单消息")
+    public R receiveBillMessage(@RequestBody @Valid ReceiveBillMessageForm form) {
+        String msg = this.messageTask.receiveBillMessage(form.getIdentity(), form.getUserId());
+        return R.ok()
+                .put("result", msg);
+    }
+
 }

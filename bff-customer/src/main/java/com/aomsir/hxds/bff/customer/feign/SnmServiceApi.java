@@ -1,5 +1,6 @@
 package com.aomsir.hxds.bff.customer.feign;
 
+import com.aomsir.hxds.bff.customer.controller.form.ReceiveBillMessageForm;
 import com.aomsir.hxds.bff.customer.controller.form.SendNewOrderMessageForm;
 import com.aomsir.hxds.common.util.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -9,4 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public interface SnmServiceApi {
     @PostMapping("/message/order/new/sendNewOrderMessageAsync")
     public R sendNewOrderMessageAsync(SendNewOrderMessageForm form);
+
+    @PostMapping("/message/receiveBillMessage")
+    public R receiveBillMessage(ReceiveBillMessageForm form);
 }

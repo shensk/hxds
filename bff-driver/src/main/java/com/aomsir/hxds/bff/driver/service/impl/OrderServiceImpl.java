@@ -188,7 +188,7 @@ public class OrderServiceImpl implements OrderService {
         form_4.setTime(startTime.split(" ")[1]);
         form_4.setMinute(waitingMinute);
 
-        // TODO: waitingMinute时间未自动更新
+
         r = this.ruleServiceApi.calculateOrderCharge(form_4);
         map = (HashMap) r.get("result");
         String mileageFee = MapUtil.getStr(map, "mileageFee");
@@ -200,7 +200,6 @@ public class OrderServiceImpl implements OrderService {
         /*
          * 5.计算系统奖励费用
          */
-        // TODO: 执行报错
         CalculateIncentiveFeeForm form_5 = new CalculateIncentiveFeeForm();
         form_5.setDriverId(form.getDriverId());
         form_5.setAcceptTime(acceptTime);
