@@ -235,4 +235,11 @@ public class OrderServiceImpl implements OrderService {
         int rows = MapUtil.getInt(r, "rows");
         return rows;
     }
+
+    @Override
+    public HashMap searchReviewDriverOrderBill(SearchReviewDriverOrderBillForm form) {
+        R r = this.odrServiceApi.searchReviewDriverOrderBill(form);
+        HashMap map = (HashMap) r.get("result");
+        return map;
+    }
 }

@@ -116,4 +116,16 @@ public class OrderController {
         return R.ok()
                  .put("rows", rows);
     }
+
+
+    @PostMapping("/searchReviewDriverOrderBill")
+    @SaCheckLogin
+    @Operation(summary = "查询司机预览订单")
+    public R searchReviewDriverOrderBill(@RequestBody @Valid SearchReviewDriverOrderBillForm form) {
+        long driverId = StpUtil.getLoginIdAsLong();
+        form.setDriverId(driverId);
+        HashMap map = this.orderService.searchReviewDriverOrderBill(form);
+        return R.ok()
+                .put("result", map);
+    }
 }
