@@ -8,6 +8,9 @@ import java.util.HashMap;
 
 public interface OrderProfitsharingDao {
     public int insert(OrderProfitsharingEntity entity);
+
+    public HashMap searchDriverIncome(String uuid);
+    public int updateProfitsharingStatus(long profitsharingId);
 }
 
 

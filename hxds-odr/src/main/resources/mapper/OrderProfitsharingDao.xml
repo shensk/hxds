@@ -19,4 +19,20 @@
             `status` = 1
     </insert>
 
+    <!--查询司机收入-->
+    <select id="searchDriverIncome" parameterType="String" resultType="HashMap">
+        SELECT p.id                        AS profitsharingId,
+               CAST(driver_income AS CHAR) AS driverIncome
+        FROM tb_order_profitsharing p
+                 JOIN tb_order o ON p.order_id = o.id
+        WHERE o.uuid = #{uuid};
+    </select>
+
+    <!--更新订单状态-->
+    <update id="updateProfitsharingStatus" parameterType="long">
+        UPDATE tb_order_profitsharing
+        SET `status`=2
+        WHERE id = #{profitsharingId}
+    </update>
+
 </mapper>
