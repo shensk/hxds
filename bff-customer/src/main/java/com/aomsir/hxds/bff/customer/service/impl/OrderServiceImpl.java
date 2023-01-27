@@ -3,10 +3,13 @@ package com.aomsir.hxds.bff.customer.service.impl;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.aomsir.hxds.bff.customer.controller.form.*;
 import com.aomsir.hxds.bff.customer.feign.*;
 import com.aomsir.hxds.bff.customer.service.OrderService;
+import com.aomsir.hxds.common.exception.HxdsException;
 import com.aomsir.hxds.common.util.R;
+import com.aomsir.hxds.common.wxpay.MyWXPayConfig;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,12 +33,22 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private RuleServiceApi ruleServiceApi;
 
-     @Resource
-     private SnmServiceApi snmServiceApi;
+    @Resource
+    private SnmServiceApi snmServiceApi;
 
-     @Resource
-     private DrServiceApi drServiceApi;
-    
+    @Resource
+    private DrServiceApi drServiceApi;
+
+
+    @Resource
+    private MyWXPayConfig myWXPayConfig;
+
+    @Resource
+    private VhrServiceApi vhrServiceApi;
+
+    @Resource
+    private CstServiceApi cstServiceApi;
+
     @Override
     @Transactional
     @LcnTransaction
@@ -95,8 +108,8 @@ public class OrderServiceImpl implements OrderService {
         r = this.mpsServiceApi.searchBefittingDriverAboutOrder(form_3);     // 获取可接单列表
         ArrayList<HashMap> list = (ArrayList<HashMap>) r.get("result");
 
-        HashMap result = new HashMap(){{
-            put("count",0);
+        HashMap result = new HashMap() {{
+            put("count", 0);
         }};
 
         if (list.size() > 0) {
@@ -155,10 +168,10 @@ public class OrderServiceImpl implements OrderService {
             form_5.setMinute(minute);
             form_5.setFavourFee(favourFee);
             this.snmServiceApi.sendNewOrderMessageAsync(form_5); //异步发送消息
-            result.put("orderId",orderId);
-            result.replace("count",list.size());
-            result.put("orderId",orderId);
-            result.replace("count",list.size());
+            result.put("orderId", orderId);
+            result.replace("count", list.size());
+            result.put("orderId", orderId);
+            result.replace("count", list.size());
         }
         return result;
     }
@@ -207,7 +220,7 @@ public class OrderServiceImpl implements OrderService {
         R r = odrServiceApi.searchOrderById(form);
         HashMap map = (HashMap) r.get("result");
         Long driverId = MapUtil.getLong(map, "driverId");
-        if(driverId!=null){
+        if (driverId != null) {
             SearchDriverBriefInfoForm infoForm = new SearchDriverBriefInfoForm();
             infoForm.setDriverId(driverId);
             r = this.drServiceApi.searchDriverBriefInfo(infoForm);
@@ -215,6 +228,70 @@ public class OrderServiceImpl implements OrderService {
             map.putAll(temp);
             return map;
         }
+        return null;
+    }
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public HashMap createWxPayment(long orderId, long customerId, Long voucherId) {
+        /*
+         * 1.先查询订单是否为6状态，其他状态都不可以生成支付订单
+         */
+        ValidCanPayOrderForm form_1 = new ValidCanPayOrderForm();
+        form_1.setOrderId(orderId);
+        form_1.setCustomerId(customerId);
+        R r = this.odrServiceApi.validCanPayOrder(form_1);
+        HashMap map = (HashMap) r.get("result");
+        String amount = MapUtil.getStr(map, "realFee");
+        String uuid = MapUtil.getStr(map, "uuid");
+        long driverId = MapUtil.getLong(map, "driverId");
+        String discount = "0.00";
+        if (voucherId != null) {
+            /*
+             * 2.查询代金券是否可以使用，并绑定
+             */
+            UseVoucherForm form_2 = new UseVoucherForm();
+            form_2.setCustomerId(customerId);
+            form_2.setVoucherId(voucherId);
+            form_2.setOrderId(orderId);
+            form_2.setAmount(amount);
+            r = this.vhrServiceApi.useVoucher(form_2);
+            discount = MapUtil.getStr(r, "result");
+        }
+        if (new BigDecimal(amount).compareTo(new BigDecimal(discount)) == -1) {
+            throw new HxdsException("总金额不能小于优惠劵面额");
+        }
+        /*
+         * 3.修改实付金额
+         */
+        amount = NumberUtil.sub(amount, discount).toString();
+        UpdateBillPaymentForm form_3 = new UpdateBillPaymentForm();
+        form_3.setOrderId(orderId);
+        form_3.setRealPay(amount);
+        form_3.setVoucherFee(discount);
+        this.odrServiceApi.updateBillPayment(form_3);
+
+        /*
+         * 4.查询用户的OpenID字符串
+         */
+        SearchCustomerOpenIdForm form_4 = new SearchCustomerOpenIdForm();
+        form_4.setCustomerId(customerId);
+        r = this.cstServiceApi.searchCustomerOpenId(form_4);
+        String customerOpenId = MapUtil.getStr(r, "result");
+
+        /*
+         * 5.查询司机的OpenId字符串
+         */
+        SearchDriverOpenIdForm form_5 = new SearchDriverOpenIdForm();
+        form_5.setDriverId(driverId);
+        r = this.drServiceApi.searchDriverOpenId(form_5);
+        String driverOpenId = MapUtil.getStr(r, "result");
+
+        /*
+         * 6.TODO 创建支付订单
+         */
+
         return null;
     }
 }
