@@ -91,5 +91,16 @@ public class OrderController {
                 .put("result", map);
     }
 
+    @PostMapping("/searchOrderById")
+    @SaCheckLogin
+    @Operation(summary = "根据ID查询订单信息")
+    public R searchOrderById(@RequestBody @Valid SearchOrderByIdForm form) {
+        long customerId = StpUtil.getLoginIdAsLong();
+        form.setCustomerId(customerId);
+        HashMap map = this.orderService.searchOrderById(form);
+        return R.ok()
+                .put("result", map);
+    }
+
 }
 

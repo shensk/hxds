@@ -307,4 +307,14 @@ public class OrderServiceImpl implements OrderService {
         HashMap map = this.orderDao.searchSettlementNeedData(orderId);
         return map;
     }
+
+    @Override
+    public HashMap searchOrderById(Map param) {
+        HashMap map = this.orderDao.searchOrderById(param);
+        String startPlaceLocation=MapUtil.getStr(map,"startPlaceLocation");
+        String endPlaceLocation=MapUtil.getStr(map,"endPlaceLocation");
+        map.replace("startPlaceLocation",JSONUtil.parseObj(startPlaceLocation));
+        map.replace("endPlaceLocation",JSONUtil.parseObj(endPlaceLocation));
+        return map;
+    }
 }

@@ -224,4 +224,13 @@ public class OrderController {
                 .put("result", map);
     }
 
+    @PostMapping("/searchOrderById")
+    @Operation(summary = "根据ID查询订单信息")
+    public R searchOrderById(@RequestBody @Valid SearchOrderByIdForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        HashMap map = this.orderService.searchOrderById(param);
+        return R.ok()
+                .put("result", map);
+    }
+
 }

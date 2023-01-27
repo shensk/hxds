@@ -4,10 +4,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import com.aomsir.hxds.bff.customer.controller.form.*;
-import com.aomsir.hxds.bff.customer.feign.MpsServiceApi;
-import com.aomsir.hxds.bff.customer.feign.OdrServiceApi;
-import com.aomsir.hxds.bff.customer.feign.RuleServiceApi;
-import com.aomsir.hxds.bff.customer.feign.SnmServiceApi;
+import com.aomsir.hxds.bff.customer.feign.*;
 import com.aomsir.hxds.bff.customer.service.OrderService;
 import com.aomsir.hxds.common.util.R;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
@@ -35,6 +32,9 @@ public class OrderServiceImpl implements OrderService {
 
      @Resource
      private SnmServiceApi snmServiceApi;
+
+     @Resource
+     private DrServiceApi drServiceApi;
     
     @Override
     @Transactional
@@ -200,5 +200,21 @@ public class OrderServiceImpl implements OrderService {
         R r = this.odrServiceApi.searchOrderForMoveById(form);
         HashMap map = (HashMap) r.get("result");
         return map;
+    }
+
+    @Override
+    public HashMap searchOrderById(SearchOrderByIdForm form) {
+        R r = odrServiceApi.searchOrderById(form);
+        HashMap map = (HashMap) r.get("result");
+        Long driverId = MapUtil.getLong(map, "driverId");
+        if(driverId!=null){
+            SearchDriverBriefInfoForm infoForm = new SearchDriverBriefInfoForm();
+            infoForm.setDriverId(driverId);
+            r = this.drServiceApi.searchDriverBriefInfo(infoForm);
+            HashMap temp = (HashMap) r.get("result");
+            map.putAll(temp);
+            return map;
+        }
+        return null;
     }
 }

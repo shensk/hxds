@@ -16,5 +16,7 @@ public interface OrderService {
     public boolean confirmArriveStartPlace(ConfirmArriveStartPlaceForm form);
 
     public HashMap searchOrderForMoveById(SearchOrderForMoveByIdForm form);
+
+    public HashMap searchOrderById(SearchOrderByIdForm form);
 }
 

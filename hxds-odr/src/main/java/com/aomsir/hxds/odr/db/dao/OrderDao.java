@@ -33,13 +33,11 @@ public interface OrderDao {
     public ArrayList<HashMap> searchOrderByPage(Map param);
 
     public HashMap searchOrderContent(long orderId);
-
     public ArrayList<String> searchOrderStartLocationIn30Days();
     public int updateOrderMileageAndFee(Map param);
-
     public long validDriverOwnOrder(Map param);
-
     public HashMap searchSettlementNeedData(long orderId);
+    public HashMap searchOrderById(Map param);
 }
 
 
