@@ -21,4 +21,8 @@ public interface OrderService {
     public int updateOrderBill(UpdateBillFeeForm form);
 
     public HashMap searchReviewDriverOrderBill(SearchReviewDriverOrderBillForm form);
+
+    public Integer searchOrderStatus(SearchOrderStatusForm form);
+
+    public String updateOrderAboutPayment(long driverId, UpdateOrderAboutPaymentForm form);
 }
