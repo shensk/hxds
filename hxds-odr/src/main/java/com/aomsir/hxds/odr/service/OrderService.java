@@ -49,4 +49,6 @@ public interface OrderService {
     public int updateOrderPrepayId(Map param);
 
     public void handlePayment(String uuid, String payId, String driverOpenId, String payTime);
+
+    public String updateOrderAboutPayment(Map param);
 }

@@ -50,6 +50,9 @@ public interface OrderDao {
     public int updateOrderPayIdAndStatus(Map param);
 
     public int finishOrder(String uuid);
+
+    public HashMap searchUuidAndStatus(long orderId);
+    public int updateOrderAboutPayment(Map param);
 }
 
 

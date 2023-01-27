@@ -8,6 +8,10 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.aomsir.hxds.common.exception.HxdsException;
 import com.aomsir.hxds.common.util.PageUtils;
+import com.aomsir.hxds.common.wxpay.MyWXPayConfig;
+import com.aomsir.hxds.common.wxpay.WXPay;
+import com.aomsir.hxds.common.wxpay.WXPayConfig;
+import com.aomsir.hxds.common.wxpay.WXPayUtil;
 import com.aomsir.hxds.odr.controller.form.TransferForm;
 import com.aomsir.hxds.odr.db.dao.OrderBillDao;
 import com.aomsir.hxds.odr.db.dao.OrderDao;
@@ -54,6 +58,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private QuartzUtil quartzUtil;
+
+    @Resource
+    private MyWXPayConfig myWXPayConfig;
+
+    @Resource
+    private WXPayConfig wxPayConfig;
     
     @Override
     public HashMap searchDriverTodayBusinessData(long driverId) {
@@ -418,6 +428,107 @@ public class OrderServiceImpl implements OrderService {
         rows = this.orderDao.finishOrder(uuid);
         if (rows != 1) {
             throw new HxdsException("更新订单结束状态失败");
+        }
+    }
+
+
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public String updateOrderAboutPayment(Map param) {
+        long orderId = MapUtil.getLong(param, "orderId");
+        /*
+         * 查询订单状态。
+         * 因为有可能Web方法先收到了付款结果通知消息，把订单状态改成了7、8状态，
+         * 所以我们要先查询订单状态。
+         */
+        HashMap map = this.orderDao.searchUuidAndStatus(orderId);
+        String uuid = MapUtil.getStr(map, "uuid");
+        int status = MapUtil.getInt(map, "status");
+        //如果订单状态已经是已付款，就退出当前方法
+        if (status == 7 || status == 8) {
+            return "付款成功";
+        }
+
+        //查询支付结果的参数
+        map.clear();
+        map.put("appid", this.myWXPayConfig.getAppID());
+        map.put("mch_id", this.myWXPayConfig.getMchID());
+        map.put("out_trade_no", uuid);
+        map.put("nonce_str", WXPayUtil.generateNonceStr());
+        try {
+            //生成数字签名
+            String sign = WXPayUtil.generateSignature(map, this.myWXPayConfig.getKey());
+            map.put("sign", sign);
+
+            WXPay wxPay = new WXPay(this.wxPayConfig);
+            //查询支付结果
+            Map<String, String> result = wxPay.orderQuery(map);
+
+            String returnCode = result.get("return_code");
+            String resultCode = result.get("result_code");
+            if ("SUCCESS".equals(returnCode) && "SUCCESS".equals(resultCode)) {
+                String tradeState = result.get("trade_state");
+                if ("SUCCESS".equals(tradeState)) {
+                    String driverOpenId = result.get("attach");
+                    String payId = result.get("transaction_id");
+                    String payTime = new DateTime(result.get("time_end"), "yyyyMMddHHmmss").toString("yyyy-MM-dd HH:mm:ss");
+                    //更新订单相关付款信息和状态
+                    param.put("payId", payId);
+                    param.put("payTime", payTime);
+
+                    //把订单更新成7状态
+                    int rows = this.orderDao.updateOrderAboutPayment(param);
+                    if (rows != 1) {
+                        throw new HxdsException("更新订单相关付款信息失败");
+                    }
+
+                    //查询系统奖励
+                    map = this.orderDao.searchDriverIdAndIncentiveFee(uuid);
+                    String incentiveFee = MapUtil.getStr(map, "incentiveFee");
+                    long driverId = MapUtil.getLong(map, "driverId");
+                    //判断系统奖励费是否大于0
+                    if (new BigDecimal(incentiveFee).compareTo(new BigDecimal("0.00")) == 1) {
+                        TransferForm form = new TransferForm();
+                        form.setUuid(IdUtil.simpleUUID());
+                        form.setAmount(incentiveFee);
+                        form.setDriverId(driverId);
+                        form.setType((byte) 2);
+                        form.setRemark("系统奖励费");
+                        //给司机钱包转账奖励费
+                        this.drServiceApi.transfer(form);
+                    }
+
+                    //先判断是否有分账定时器
+                    if (this.quartzUtil.checkExists(uuid, "代驾单分账任务组") || this.quartzUtil.checkExists(uuid, "查询代驾单分账任务组")) {
+                        //存在分账定时器就不需要再执行分账
+                        return "付款成功";
+                    }
+                    //执行分账
+                    JobDetail jobDetail = JobBuilder.newJob(HandleProfitsharingJob.class).build();
+                    Map dataMap = jobDetail.getJobDataMap();
+                    dataMap.put("uuid", uuid);
+                    dataMap.put("driverOpenId", driverOpenId);
+                    dataMap.put("payId", payId);
+
+                    Date executeDate = new DateTime().offset(DateField.MINUTE, 2);
+                    this.quartzUtil.addJob(jobDetail, uuid, "代驾单分账任务组", executeDate);
+                    rows = this.orderDao.finishOrder(uuid);
+                    if(rows!=1){
+                        throw new HxdsException("更新订单结束状态失败");
+                    }
+                    return "付款成功";
+                } else {
+                    return "付款异常";
+                }
+            } else {
+                return "付款异常";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HxdsException("更新订单相关付款信息失败");
         }
     }
 }
