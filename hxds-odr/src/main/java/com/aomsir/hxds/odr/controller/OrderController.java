@@ -233,4 +233,22 @@ public class OrderController {
                 .put("result", map);
     }
 
+    @PostMapping("/validCanPayOrder")
+    @Operation(summary = "检查订单是否可以支付")
+    public R validCanPayOrder(@RequestBody @Valid ValidCanPayOrderForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        HashMap map = this.orderService.validCanPayOrder(param);
+        return R.ok()
+                .put("result", map);
+    }
+
+    @PostMapping("/updateOrderPrepayId")
+    @Operation(summary = "更新预支付订单ID")
+    public R updateOrderPrepayId(@RequestBody @Valid UpdateOrderPrepayIdForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int rows = this.orderService.updateOrderPrepayId(param);
+        return R.ok()
+                .put("rows", rows);
+    }
+
 }

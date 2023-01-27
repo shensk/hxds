@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aomsir.hxds.vhr.db.dao.VoucherCustomerDao">
+
     <insert id="insert" parameterType="com.aomsir.hxds.vhr.db.pojo.VoucherCustomerEntity">
         INSERT INTO tb_voucher_customer
         SET customer_id = #{customerId},
@@ -16,6 +17,7 @@
         </if>
         create_time = NOW()
     </insert>
+
     <select id="validCanUseVoucher" parameterType="Map" resultType="String">
         SELECT CAST(v.discount AS CHAR) AS discount
         FROM tb_voucher_customer vc
@@ -27,10 +29,13 @@
           AND ((CURRENT_DATE BETWEEN vc.start_time AND vc.end_time)
             OR (vc.start_time IS NULL AND vc.end_time IS NULL));
     </select>
+
     <update id="bindVoucher" parameterType="Map">
         UPDATE tb_voucher_customer
         SET order_id = #{orderId},
             `status` = 2
         WHERE voucher_id = #{voucherId}
     </update>
+
+
 </mapper>

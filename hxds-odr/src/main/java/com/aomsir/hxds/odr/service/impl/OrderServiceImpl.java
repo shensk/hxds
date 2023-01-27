@@ -317,4 +317,24 @@ public class OrderServiceImpl implements OrderService {
         map.replace("endPlaceLocation",JSONUtil.parseObj(endPlaceLocation));
         return map;
     }
+
+    @Override
+    public HashMap validCanPayOrder(Map param) {
+        HashMap map = this.orderDao.validCanPayOrder(param);
+        if (map == null || map.size() == 0) {
+            throw new HxdsException("订单无法支付");
+        }
+        return map;
+    }
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int updateOrderPrepayId(Map param) {
+        int rows = this.orderDao.updateOrderPrepayId(param);
+        if (rows != 1) {
+            throw new HxdsException("更新预支付订单ID失败");
+        }
+        return rows;
+    }
 }

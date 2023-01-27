@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.odr.controller.form.SearchReviewDriverOrderBillForm;
 import com.aomsir.hxds.odr.controller.form.UpdateBillFeeForm;
+import com.aomsir.hxds.odr.controller.form.UpdateBillPaymentForm;
 import com.aomsir.hxds.odr.service.OrderBillService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,5 +42,14 @@ public class OrderBillController {
         HashMap map = this.orderBillService.searchReviewDriverOrderBill(param);
         return R.ok()
                 .put("result", map);
+    }
+
+    @PostMapping("/updateBillPayment")
+    @Operation(summary = "更新账单实际支付费用")
+    public R updateBillPayment(@RequestBody @Valid UpdateBillPaymentForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int rows = this.orderBillService.updateBillPayment(param);
+        return R.ok()
+                .put("rows", rows);
     }
 }

@@ -337,5 +337,22 @@
         </if>
     </select>
 
+    <!--判断能否支付-->
+    <select id="validCanPayOrder" parameterType="Map" resultType="HashMap">
+        SELECT CAST(real_fee AS CHAR)  AS realFee,
+               CAST(driver_id AS CHAR) AS driverId,
+               uuid
+        FROM tb_order
+        WHERE id = #{orderId}
+          AND customer_id = #{customerId}
+          AND `status` = 6
+    </select>
+
+    <!--更新订单预支付ID-->
+    <update id="updateOrderPrepayId" parameterType="Map">
+        UPDATE tb_order
+        SET prepay_id = #{prepayId}
+        WHERE id = #{orderId}
+    </update>
 
 </mapper>

@@ -11,8 +11,9 @@ public interface OrderBillDao {
 
     public int deleteUnAcceptOrderBill(long orderId);
     public int updateBillFee(Map param);
-
     public HashMap searchReviewDriverOrderBill(Map param);
+
+    public int updateBillPayment(Map param);
 }
 
 
