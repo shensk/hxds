@@ -380,5 +380,10 @@
         WHERE uuid = #{uuid}
     </update>
 
+    <update id="finishOrder" parameterType="String">
+        UPDATE tb_order
+        SET `status` = 8
+        WHERE uuid = #{uuid}
+    </update>
 
 </mapper>

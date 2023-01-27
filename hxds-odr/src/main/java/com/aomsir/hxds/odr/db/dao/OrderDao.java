@@ -48,6 +48,8 @@ public interface OrderDao {
     public HashMap searchDriverIdAndIncentiveFee(String uuid);
 
     public int updateOrderPayIdAndStatus(Map param);
+
+    public int finishOrder(String uuid);
 }
 
 

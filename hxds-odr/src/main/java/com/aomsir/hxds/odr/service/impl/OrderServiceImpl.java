@@ -1,5 +1,7 @@
 package com.aomsir.hxds.odr.service.impl;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONObject;
@@ -12,8 +14,12 @@ import com.aomsir.hxds.odr.db.dao.OrderDao;
 import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
 import com.aomsir.hxds.odr.db.pojo.OrderEntity;
 import com.aomsir.hxds.odr.feign.DrServiceApi;
+import com.aomsir.hxds.odr.quartz.QuartzUtil;
+import com.aomsir.hxds.odr.quartz.job.HandleProfitsharingJob;
 import com.aomsir.hxds.odr.service.OrderService;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -26,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -44,6 +51,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private DrServiceApi drServiceApi;
+
+    @Resource
+    private QuartzUtil quartzUtil;
     
     @Override
     public HashMap searchDriverTodayBusinessData(long driverId) {
@@ -387,6 +397,27 @@ public class OrderServiceImpl implements OrderService {
             this.drServiceApi.transfer(form);
         }
 
-        //TODO 执行分账
+        // 执行分账
+        //先判断是否有分账定时器
+        if (this.quartzUtil.checkExists(uuid, "代驾单分账任务组") || this.quartzUtil.checkExists(uuid, "查询代驾单分账任务组")) {
+            //存在分账定时器就不需要再执行分账
+            return;
+        }
+        //执行分账
+        JobDetail jobDetail = JobBuilder.newJob(HandleProfitsharingJob.class).build();
+        Map dataMap = jobDetail.getJobDataMap();
+        dataMap.put("uuid", uuid);
+        dataMap.put("driverOpenId", driverOpenId);
+        dataMap.put("payId", payId);
+
+        //2分钟之后执行分账定时器
+        Date executeDate = new DateTime().offset(DateField.MINUTE, 2);
+        this.quartzUtil.addJob(jobDetail, uuid, "代驾单分账任务组", executeDate);
+
+        //更新订单状态为已完成状态（8）
+        rows = this.orderDao.finishOrder(uuid);
+        if (rows != 1) {
+            throw new HxdsException("更新订单结束状态失败");
+        }
     }
 }
