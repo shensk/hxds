@@ -1,5 +1,7 @@
 package com.aomsir.hxds.odr.quartz.job;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.JSONArray;
@@ -10,7 +12,10 @@ import com.aomsir.hxds.common.wxpay.WXPay;
 import com.aomsir.hxds.common.wxpay.WXPayConstants;
 import com.aomsir.hxds.common.wxpay.WXPayUtil;
 import com.aomsir.hxds.odr.db.dao.OrderProfitsharingDao;
+import com.aomsir.hxds.odr.quartz.QuartzUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -18,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +34,9 @@ public class HandleProfitsharingJob extends QuartzJobBean {
 
     @Resource
     private MyWXPayConfig myWXPayConfig;
+
+    @Resource
+    private QuartzUtil quartzUtil;
 
     @Override
     @Transactional
@@ -104,7 +113,15 @@ public class HandleProfitsharingJob extends QuartzJobBean {
                     }
                     //判断正在分账中
                     else if ("PROCESSING".equals(status)) {
-                        //TODO 创建查询分账定时器
+                        //如果状态是分账中，等待几分钟再查询分账结果
+                        JobDetail jobDetail = JobBuilder.newJob(SearchProfitsharingJob.class).build();
+                        Map dataMap = jobDetail.getJobDataMap();
+                        dataMap.put("uuid", uuid);
+                        dataMap.put("profitsharingId", profitsharingId);
+                        dataMap.put("payId", payId);
+
+                        Date executeDate = new DateTime().offset(DateField.MINUTE, 20);
+                        this.quartzUtil.addJob(jobDetail, uuid, "查询代驾单分账任务组", executeDate);
                     }
                 } else {
                     log.error("执行分账失败", new HxdsException("执行分账失败"));
