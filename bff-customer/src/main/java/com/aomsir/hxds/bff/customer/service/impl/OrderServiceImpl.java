@@ -10,6 +10,8 @@ import com.aomsir.hxds.bff.customer.service.OrderService;
 import com.aomsir.hxds.common.exception.HxdsException;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.common.wxpay.MyWXPayConfig;
+import com.aomsir.hxds.common.wxpay.WXPay;
+import com.aomsir.hxds.common.wxpay.WXPayUtil;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,9 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -289,9 +293,67 @@ public class OrderServiceImpl implements OrderService {
         String driverOpenId = MapUtil.getStr(r, "result");
 
         /*
-         * 6.TODO 创建支付订单
+         * 6. 创建支付订单
          */
+        try {
+            WXPay wxPay = new WXPay(this.myWXPayConfig);
+            HashMap param = new HashMap();
+            param.put("nonce_str", WXPayUtil.generateNonceStr());//随机字符串
+            param.put("body", "代驾费");
+            param.put("out_trade_no", uuid);
+            //充值金额转换成分为单位，并且让BigDecimal取整数
+            //amount="1.00";
+            param.put("total_fee", NumberUtil.mul(amount, "100").setScale(0, RoundingMode.FLOOR).toString());
+            param.put("spbill_create_ip", "127.0.0.1");
 
-        return null;
+            param.put("notify_url", "http://demo.com");   // TODO 这里要修改成内网穿透的公网URL
+            param.put("trade_type", "JSAPI");
+            param.put("openid", customerOpenId);
+            param.put("attach", driverOpenId);
+            param.put("profit_sharing", "Y"); //支付需要分账
+
+            //创建支付订单
+            Map<String, String> result = wxPay.unifiedOrder(param);
+
+            //预支付交易会话标识ID
+            String prepayId = result.get("prepay_id");
+            if (prepayId != null) {
+                /*
+                 * 7.更新订单记录中的prepay_id字段值
+                 */
+                UpdateOrderPrepayIdForm form_6 = new UpdateOrderPrepayIdForm();
+                form_6.setOrderId(orderId);
+                form_6.setPrepayId(prepayId);
+                this.odrServiceApi.updateOrderPrepayId(form_6);
+
+                //准备生成数字签名用的数据
+                map.clear();
+                map.put("appId", this.myWXPayConfig.getAppID());
+                String timeStamp = new Date().getTime() + "";
+                map.put("timeStamp", timeStamp);
+                String nonceStr = WXPayUtil.generateNonceStr();
+                map.put("nonceStr", nonceStr);
+                map.put("package", "prepay_id=" + prepayId);
+                map.put("signType", "MD5");
+
+                //生成数据签名
+                String paySign = WXPayUtil.generateSignature(map, this.myWXPayConfig.getKey()); //生成数字签名
+
+                map.clear(); //清理HashMap，放入结果
+                map.put("package", "prepay_id=" + prepayId);
+                map.put("timeStamp", timeStamp);
+                map.put("nonceStr", nonceStr);
+                map.put("paySign", paySign);
+                //uuid用于付款成功后，移动端主动请求更新充值状态
+                map.put("uuid", uuid);
+                return map;
+            } else {
+                log.error("创建支付订单失败");
+                throw new HxdsException("创建支付订单失败");
+            }
+        } catch (Exception e) {
+            log.error("创建支付订单失败", e);
+            throw new HxdsException("创建支付订单失败");
+        }
     }
 }
