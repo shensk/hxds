@@ -75,6 +75,12 @@ spring:
             - Path=/hxds-customer/**
           filters:
             - StripPrefix=1
+        - id: hxds-odr
+          uri: lb://hxds-odr
+          predicates:
+            - Path=/hxds-odr/**
+          filters:
+            - StripPrefix=1
   servlet:
     multipart:
       enabled: true
