@@ -131,4 +131,12 @@ public class DriverController {
         return R.ok()
                 .put("result", map);
     }
+
+    @PostMapping("/searchDriverOpenId")
+    @Operation(summary = "查询司机的OpenId")
+    public R searchDriverOpenId(@RequestBody @Valid SearchDriverOpenIdForm form) {
+        String openId = this.driverService.searchDriverOpenId(form.getDriverId());
+        return R.ok()
+                .put("result", openId);
+    }
 }
