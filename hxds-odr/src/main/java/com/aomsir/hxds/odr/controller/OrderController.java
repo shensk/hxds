@@ -299,7 +299,8 @@ public class OrderController {
                 String driverOpenId = map.get("attach");
                 String payTime = DateUtil.parse(map.get("time_end"), "yyyyMMddHHmmss").toString("yyyy-MM-dd HH:mm:ss");
 
-                //TODO 修改订单状态、执行分账、发放系统奖励
+                // 修改订单状态、执行分账、发放系统奖励
+                this.orderService.handlePayment(uuid, payId, driverOpenId, payTime);
             }
         } else {
             response.sendError(500, "数字签名异常");

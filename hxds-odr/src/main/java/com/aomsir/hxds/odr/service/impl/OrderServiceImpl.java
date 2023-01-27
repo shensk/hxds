@@ -1,14 +1,17 @@
 package com.aomsir.hxds.odr.service.impl;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.aomsir.hxds.common.exception.HxdsException;
 import com.aomsir.hxds.common.util.PageUtils;
+import com.aomsir.hxds.odr.controller.form.TransferForm;
 import com.aomsir.hxds.odr.db.dao.OrderBillDao;
 import com.aomsir.hxds.odr.db.dao.OrderDao;
 import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
 import com.aomsir.hxds.odr.db.pojo.OrderEntity;
+import com.aomsir.hxds.odr.feign.DrServiceApi;
 import com.aomsir.hxds.odr.service.OrderService;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import org.slf4j.Logger;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +41,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private RedisTemplate redisTemplate;
+
+    @Resource
+    private DrServiceApi drServiceApi;
     
     @Override
     public HashMap searchDriverTodayBusinessData(long driverId) {
@@ -336,5 +343,50 @@ public class OrderServiceImpl implements OrderService {
             throw new HxdsException("更新预支付订单ID失败");
         }
         return rows;
+    }
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public void handlePayment(String uuid, String payId, String driverOpenId, String payTime) {
+        /*
+         * 更新订单状态之前，先查询订单的状态。
+         * 因为乘客端付款成功之后，会主动发起Ajax请求，要求更新订单状态。
+         * 所以后端接收到付款通知消息之后，不要着急修改订单状态，先看一下订单是否已经是7状态
+         */
+        HashMap map = this.orderDao.searchOrderIdAndStatus(uuid);
+        int status = MapUtil.getInt(map, "status");
+        if (status == 7) {
+            return;
+        }
+
+        HashMap param = new HashMap() {{
+            put("uuid", uuid);
+            put("payId", payId);
+            put("payTime", payTime);
+        }};
+        //更新订单记录的PayId、状态和付款时间
+        int rows = this.orderDao.updateOrderPayIdAndStatus(param);
+        if (rows != 1) {
+            throw new HxdsException("更新支付订单ID失败");
+        }
+
+        //查询系统奖励
+        map = this.orderDao.searchDriverIdAndIncentiveFee(uuid);
+        String incentiveFee = MapUtil.getStr(map, "incentiveFee");
+        long driverId = MapUtil.getLong(map, "driverId");
+        //判断系统奖励费是否大于0
+        if (new BigDecimal(incentiveFee).compareTo(new BigDecimal("0.00")) == 1) {
+            TransferForm form = new TransferForm();
+            form.setUuid(IdUtil.simpleUUID());
+            form.setAmount(incentiveFee);
+            form.setDriverId(driverId);
+            form.setType((byte) 2);
+            form.setRemark("系统奖励费");
+            //给司机钱包转账奖励费
+            this.drServiceApi.transfer(form);
+        }
+
+        //TODO 执行分账
     }
 }

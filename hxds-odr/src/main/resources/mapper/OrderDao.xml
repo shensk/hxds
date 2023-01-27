@@ -355,4 +355,30 @@
         WHERE id = #{orderId}
     </update>
 
+    <!--查询订单id与状态-->
+    <select id="searchOrderIdAndStatus" parameterType="String" resultType="HashMap">
+        SELECT CAST(id AS CHAR) AS id,
+               `status`
+        FROM tb_order
+        WHERE uuid = #{uuid}
+    </select>
+
+    <!--查询订单id与费用-->
+    <select id="searchDriverIdAndIncentiveFee" parameterType="String" resultType="HashMap">
+        SELECT CAST(driver_id AS CHAR)     AS driverId,
+               CAST(incentive_fee AS CHAR) AS incentiveFee
+        FROM tb_order
+        WHERE uuid = #{uuid}
+    </select>
+
+    <!--查询订单支付id与状态-->
+    <update id="updateOrderPayIdAndStatus" parameterType="Map">
+        UPDATE tb_order
+        SET pay_id   = #{payId},
+            `status` = 7,
+            pay_time = #{payTime}
+        WHERE uuid = #{uuid}
+    </update>
+
+
 </mapper>

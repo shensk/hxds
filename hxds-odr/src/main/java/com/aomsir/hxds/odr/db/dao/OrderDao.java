@@ -42,6 +42,12 @@ public interface OrderDao {
     public HashMap validCanPayOrder(Map param);
 
     public int updateOrderPrepayId(Map param);
+
+    public HashMap searchOrderIdAndStatus(String uuid);
+
+    public HashMap searchDriverIdAndIncentiveFee(String uuid);
+
+    public int updateOrderPayIdAndStatus(Map param);
 }
 
 
