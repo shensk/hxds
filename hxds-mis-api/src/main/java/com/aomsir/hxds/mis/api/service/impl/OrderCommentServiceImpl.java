@@ -5,6 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.mis.api.controller.form.AcceptCommentAppealForm;
+import com.aomsir.hxds.mis.api.controller.form.HandleCommentAppealForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchCommentByPageForm;
 import com.aomsir.hxds.mis.api.db.dao.UserDao;
 import com.aomsir.hxds.mis.api.feign.OdrServiceApi;
@@ -44,5 +45,12 @@ public class OrderCommentServiceImpl implements OrderCommentService {
         String name = MapUtil.getStr(map, "name"); //工作人员的姓名
         form.setUserName(name);
         this.workflowServiceApi.acceptCommentAppeal(form);
+    }
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public void handleCommentAppeal(HandleCommentAppealForm form) {
+        this.workflowServiceApi.handleCommentAppeal(form);
     }
 }
