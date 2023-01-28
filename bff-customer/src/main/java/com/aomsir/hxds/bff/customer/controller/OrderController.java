@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import com.aomsir.hxds.bff.customer.controller.form.*;
 import com.aomsir.hxds.bff.customer.service.OrderService;
+import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -121,6 +122,17 @@ public class OrderController {
         String result = this.orderService.updateOrderAboutPayment(form);
         return R.ok()
                 .put("result", result);
+    }
+
+    @PostMapping("/searchCustomerOrderByPage")
+    @SaCheckLogin
+    @Operation(summary = "查询订单分页记录")
+    public R searchCustomerOrderByPage(@RequestBody @Valid SearchCustomerOrderByPageForm form){
+        long customerId = StpUtil.getLoginIdAsLong();
+        form.setCustomerId(customerId);
+        PageUtils pageUtils = this.orderService.searchCustomerOrderByPage(form);
+        return R.ok()
+                .put("result", pageUtils);
     }
 
 }

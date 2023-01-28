@@ -58,6 +58,9 @@ public interface OrderDao {
 
     public ArrayList<HashMap> searchDriverOrderByPage(Map param);
     public long searchDriverOrderCount(Map param);
+
+    public ArrayList<HashMap> searchCustomerOrderByPage(Map param);
+    public long searchCustomerOrderCount(Map param);
 }
 
 

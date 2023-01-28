@@ -547,4 +547,20 @@ public class OrderServiceImpl implements OrderService {
         PageUtils pageUtils = new PageUtils(list, count, start, length);
         return pageUtils;
     }
+
+
+    @Override
+    public PageUtils searchCustomerOrderByPage(Map param) {
+        long count = this.orderDao.searchCustomerOrderCount(param);
+        ArrayList<HashMap> list = null;
+        if (count > 0) {
+            list = this.orderDao.searchCustomerOrderByPage(param);
+        } else {
+            list = new ArrayList<>();
+        }
+        int start = MapUtil.getInt(param, "start");
+        int length = MapUtil.getInt(param, "length");
+        PageUtils pageUtils = new PageUtils(list, count, start, length);
+        return pageUtils;
+    }
 }

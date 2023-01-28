@@ -53,4 +53,6 @@ public interface OrderService {
     public String updateOrderAboutPayment(Map param);
 
     public PageUtils searchDriverOrderByPage(Map param);
+
+    public PageUtils searchCustomerOrderByPage(Map param);
 }
