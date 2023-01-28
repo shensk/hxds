@@ -1,7 +1,9 @@
 package com.aomsir.hxds.odr.service.impl;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.map.MapUtil;
 import com.aomsir.hxds.common.exception.HxdsException;
+import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.odr.db.dao.OrderCommentDao;
 import com.aomsir.hxds.odr.db.dao.OrderDao;
 import com.aomsir.hxds.odr.db.pojo.OrderCommentEntity;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,5 +94,24 @@ public class OrderCommentServiceImpl implements OrderCommentService {
     public HashMap searchCommentByOrderId(Map param) {
         HashMap map = this.orderCommentDao.searchCommentByOrderId(param);
         return map;
+    }
+
+    @Override
+    public PageUtils searchCommentByPage(Map param) {
+        long count = this.orderCommentDao.searchCommentCount(param);
+        ArrayList<HashMap> list = null;
+        if (count > 0) {
+            list = this.orderCommentDao.searchCommentByPage(param);
+            list.forEach(one->{
+                Integer temp = MapUtil.getInt(one, "handler");
+                one.replace("handler",temp==1);
+            });
+        } else {
+            list = new ArrayList<>();
+        }
+        int start = MapUtil.getInt(param, "start");
+        int length = MapUtil.getInt(param, "length");
+        PageUtils pageUtils = new PageUtils(list, count, start, length);
+        return pageUtils;
     }
 }

@@ -1,9 +1,11 @@
 package com.aomsir.hxds.odr.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.odr.controller.form.InsertCommentForm;
 import com.aomsir.hxds.odr.controller.form.SearchCommentByOrderIdForm;
+import com.aomsir.hxds.odr.controller.form.SearchCommentByPageForm;
 import com.aomsir.hxds.odr.db.pojo.OrderCommentEntity;
 import com.aomsir.hxds.odr.service.OrderCommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,5 +47,19 @@ public class OrderCommentController {
         HashMap map = this.orderCommentService.searchCommentByOrderId(param);
         return R.ok()
                 .put("result", map);
+    }
+
+
+    @PostMapping("/searchCommentByPage")
+    @Operation(summary = "查询订单评价分页记录")
+    public R searchCommentByPage(@RequestBody @Valid SearchCommentByPageForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int page= form.getPage();
+        int length = form.getLength();
+        int start=(page-1)*length;
+        param.put("start",start);
+        PageUtils pageUtils = this.orderCommentService.searchCommentByPage(param);
+        return R.ok()
+                .put("result", pageUtils);
     }
 }

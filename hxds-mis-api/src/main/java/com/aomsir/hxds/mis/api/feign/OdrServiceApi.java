@@ -1,6 +1,7 @@
 package com.aomsir.hxds.mis.api.feign;
 
 import com.aomsir.hxds.common.util.R;
+import com.aomsir.hxds.mis.api.controller.form.SearchCommentByPageForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchOrderByPageForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchOrderContentForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchOrderStatusForm;
@@ -21,5 +22,8 @@ public interface OdrServiceApi {
 
     @PostMapping("/order/searchOrderStartLocationIn30Days")
     public R searchOrderStartLocationIn30Days();
+
+    @PostMapping("/comment/searchCommentByPage")
+    public R searchCommentByPage(SearchCommentByPageForm form);
 }
 
