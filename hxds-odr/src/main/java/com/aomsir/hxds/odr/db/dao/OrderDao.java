@@ -53,6 +53,8 @@ public interface OrderDao {
 
     public HashMap searchUuidAndStatus(long orderId);
     public int updateOrderAboutPayment(Map param);
+
+    public long validDriverAndCustomerOwnOrder(Map param);
 }
 
 

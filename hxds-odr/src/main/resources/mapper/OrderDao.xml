@@ -401,4 +401,13 @@
         WHERE id = #{orderId}
     </update>
 
+    <!--验证司机和乘客是否关联这个订单-->
+    <select id="validDriverAndCustomerOwnOrder" parameterType="Map" resultType="long">
+        SELECT COUNT(*)
+        FROM tb_order
+        WHERE id = #{orderId}
+          AND driver_id = #{driverId}
+          AND customer_id = #{customerId}
+    </select>
+
 </mapper>
