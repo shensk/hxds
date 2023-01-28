@@ -223,17 +223,33 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public HashMap searchOrderById(SearchOrderByIdForm form) {
-        R r = odrServiceApi.searchOrderById(form);
+        R r = this.odrServiceApi.searchOrderById(form);
         HashMap map = (HashMap) r.get("result");
         Long driverId = MapUtil.getLong(map, "driverId");
         if (driverId != null) {
             SearchDriverBriefInfoForm infoForm = new SearchDriverBriefInfoForm();
             infoForm.setDriverId(driverId);
             r = this.drServiceApi.searchDriverBriefInfo(infoForm);
+
             HashMap temp = (HashMap) r.get("result");
             map.putAll(temp);
+            int status = MapUtil.getInt(map, "status");
+            HashMap cmtMap = new HashMap();
+            if (status >= 7) {
+                SearchCommentByOrderIdForm commentForm = new SearchCommentByOrderIdForm();
+                commentForm.setOrderId(form.getOrderId());
+                commentForm.setCustomerId(form.getCustomerId());
+                r = this.odrServiceApi.searchCommentByOrderId(commentForm);
+                if (r.containsKey("result")) {
+                    cmtMap = (HashMap) r.get("result");
+                } else {
+                    cmtMap.put("rate", 5);
+                }
+            }
+            map.put("comment", cmtMap);
             return map;
         }
+
         return null;
     }
 

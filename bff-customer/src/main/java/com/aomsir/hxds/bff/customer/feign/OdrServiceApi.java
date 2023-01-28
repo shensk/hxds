@@ -48,4 +48,7 @@ public interface OdrServiceApi {
     @PostMapping("/order/searchCustomerOrderByPage")
     public R searchCustomerOrderByPage(SearchCustomerOrderByPageForm form);
 
+    @PostMapping("/comment/searchCommentByOrderId")
+    public R searchCommentByOrderId(SearchCommentByOrderIdForm form);
+
 }
