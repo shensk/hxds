@@ -28,4 +28,6 @@ public interface OrderService {
     public String updateOrderAboutPayment(long driverId, UpdateOrderAboutPaymentForm form);
 
     public PageUtils searchDriverOrderByPage(SearchDriverOrderByPageForm form);
+
+    public HashMap searchOrderById(SearchOrderByIdForm form);
 }

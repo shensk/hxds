@@ -3,6 +3,7 @@ package com.aomsir.hxds.odr.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.odr.controller.form.InsertCommentForm;
+import com.aomsir.hxds.odr.controller.form.SearchCommentByOrderIdForm;
 import com.aomsir.hxds.odr.db.pojo.OrderCommentEntity;
 import com.aomsir.hxds.odr.service.OrderCommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/comment")
@@ -33,5 +36,14 @@ public class OrderCommentController {
         int rows = this.orderCommentService.insert(entity);
         return R.ok()
                 .put("rows", rows);
+    }
+
+    @PostMapping("/searchCommentByOrderId")
+    @Operation(summary = "根据订单ID查询评价")
+    public HashMap searchCommentByOrderId(@RequestBody @Valid SearchCommentByOrderIdForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        HashMap map = this.orderCommentService.searchCommentByOrderId(param);
+        return R.ok()
+                .put("result", map);
     }
 }
