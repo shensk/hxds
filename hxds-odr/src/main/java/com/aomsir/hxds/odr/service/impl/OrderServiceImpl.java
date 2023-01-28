@@ -531,4 +531,20 @@ public class OrderServiceImpl implements OrderService {
             throw new HxdsException("更新订单相关付款信息失败");
         }
     }
+
+
+    @Override
+    public PageUtils searchDriverOrderByPage(Map param) {
+        long count = this.orderDao.searchDriverOrderCount(param);
+        ArrayList<HashMap> list = null;
+        if (count > 0) {
+            list = this.orderDao.searchDriverOrderByPage(param);
+        } else {
+            list = new ArrayList<>();
+        }
+        int start = (Integer) param.get("start");
+        int length = (Integer) param.get("length");
+        PageUtils pageUtils = new PageUtils(list, count, start, length);
+        return pageUtils;
+    }
 }

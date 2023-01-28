@@ -1,11 +1,13 @@
 package com.aomsir.hxds.bff.driver.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.NumberUtil;
 import com.aomsir.hxds.bff.driver.controller.form.*;
 import com.aomsir.hxds.bff.driver.feign.*;
 import com.aomsir.hxds.bff.driver.service.OrderService;
 import com.aomsir.hxds.common.exception.HxdsException;
+import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import org.slf4j.Logger;
@@ -280,5 +282,13 @@ public class OrderServiceImpl implements OrderService {
         r = this.odrServiceApi.updateOrderAboutPayment(form);
         String result = MapUtil.getStr(r, "result");
         return result;
+    }
+
+    @Override
+    public PageUtils searchDriverOrderByPage(SearchDriverOrderByPageForm form) {
+        R r = this.odrServiceApi.searchDriverOrderByPage(form);
+        HashMap map = (HashMap) r.get("result");
+        PageUtils pageUtils = BeanUtil.toBean(map, PageUtils.class);
+        return pageUtils;
     }
 }

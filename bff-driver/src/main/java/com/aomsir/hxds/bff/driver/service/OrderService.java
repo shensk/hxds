@@ -1,6 +1,7 @@
 package com.aomsir.hxds.bff.driver.service;
 
 import com.aomsir.hxds.bff.driver.controller.form.*;
+import com.aomsir.hxds.common.util.PageUtils;
 
 import java.util.HashMap;
 
@@ -25,4 +26,6 @@ public interface OrderService {
     public Integer searchOrderStatus(SearchOrderStatusForm form);
 
     public String updateOrderAboutPayment(long driverId, UpdateOrderAboutPaymentForm form);
+
+    public PageUtils searchDriverOrderByPage(SearchDriverOrderByPageForm form);
 }

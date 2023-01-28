@@ -3,11 +3,9 @@ package com.aomsir.hxds.odr.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
-import com.aomsir.hxds.bff.customer.controller.form.ValidCanPayOrderForm;
 import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.common.wxpay.MyWXPayConfig;
-import com.aomsir.hxds.common.wxpay.WXPayConfig;
 import com.aomsir.hxds.common.wxpay.WXPayUtil;
 import com.aomsir.hxds.odr.controller.form.*;
 import com.aomsir.hxds.odr.db.pojo.OrderBillEntity;
@@ -315,6 +313,20 @@ public class OrderController {
         String result = this.orderService.updateOrderAboutPayment(param);
         return R.ok()
                 .put("result", result);
+    }
+
+
+    @PostMapping("/searchDriverOrderByPage")
+    @Operation(summary = "查询订单分页记录")
+    public R searchDriverOrderByPage(@RequestBody @Valid SearchDriverOrderByPageForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int page = form.getPage();
+        int length = form.getLength();
+        int start = (page - 1) * length;
+        param.put("start", start);
+        PageUtils pageUtils = this.orderService.searchDriverOrderByPage(param);
+        return R.ok()
+                .put("result", pageUtils);
     }
 
 }

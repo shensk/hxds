@@ -410,4 +410,41 @@
           AND customer_id = #{customerId}
     </select>
 
+    <!--分页查询司机订单信息-->
+    <select id="searchDriverOrderByPage" parameterType="Map" resultType="HashMap">
+        SELECT CAST(o.id AS CHAR) AS id,
+        DATE_FORMAT(o.accept_time, '%Y-%m-%d %H:%i:%s') AS acceptTime,
+        DATE_FORMAT(o.accept_time, '%Y年%m月') AS `month`,
+        CAST(o.real_fee AS CHAR) AS realFee,
+        o.`status`,
+        o.start_place AS startPlace,
+        o.end_place AS endPlace,
+        IFNULL(c.rate, -1) AS rate
+        FROM tb_order o
+        LEFT JOIN tb_order_comment c ON o.id = c.order_id
+        WHERE 1=1
+        <if test="driverId!=null">
+            AND o.driver_id = #{driverId}
+        </if>
+        <if test="status!=null">
+            AND o.`status`=#{status}
+        </if>
+        ORDER BY o.id DESC
+        LIMIT #{start}, #{length}
+    </select>
+
+    <!--查询司机订单数量-->
+    <select id="searchDriverOrderCount" parameterType="Map" resultType="long">
+        SELECT COUNT(*)
+        FROM tb_order
+        WHERE 1=1
+        <if test="driverId!=null">
+            AND driver_id = #{driverId}
+        </if>
+        <if test="status!=null">
+            AND `status`=#{status}
+        </if>
+    </select>
+
+
 </mapper>
