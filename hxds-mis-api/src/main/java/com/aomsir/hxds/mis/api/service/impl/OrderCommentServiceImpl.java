@@ -6,6 +6,7 @@ import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.mis.api.controller.form.AcceptCommentAppealForm;
 import com.aomsir.hxds.mis.api.controller.form.HandleCommentAppealForm;
+import com.aomsir.hxds.mis.api.controller.form.SearchAppealContentForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchCommentByPageForm;
 import com.aomsir.hxds.mis.api.db.dao.UserDao;
 import com.aomsir.hxds.mis.api.feign.OdrServiceApi;
@@ -52,5 +53,12 @@ public class OrderCommentServiceImpl implements OrderCommentService {
     @LcnTransaction
     public void handleCommentAppeal(HandleCommentAppealForm form) {
         this.workflowServiceApi.handleCommentAppeal(form);
+    }
+
+    @Override
+    public HashMap searchAppealContent(SearchAppealContentForm form) {
+        R r = this.workflowServiceApi.searchAppealContent(form);
+        HashMap map = (HashMap) r.get("result");
+        return map;
     }
 }
