@@ -11,6 +11,8 @@ public interface VoucherCustomerDao {
     public String validCanUseVoucher(Map param);
 
     public int bindVoucher(Map param);
+
+    public long searcherTakeVoucherNum(Map param);
 }
 
 

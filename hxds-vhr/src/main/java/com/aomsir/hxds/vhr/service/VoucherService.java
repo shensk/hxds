@@ -3,6 +3,7 @@ package com.aomsir.hxds.vhr.service;
 import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.vhr.db.pojo.VoucherEntity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public interface VoucherService {
@@ -21,4 +22,8 @@ public interface VoucherService {
     public PageUtils searchUsedVoucherByPage(Map param);
 
     public long searchUnUseVoucherCount(Map param);
+
+    public boolean takeVoucher(Map param);
+
+    public HashMap searchBestUnUseVoucher(Map param);
 }

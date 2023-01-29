@@ -230,10 +230,22 @@ public class OrderServiceImpl implements OrderService {
             SearchDriverBriefInfoForm infoForm = new SearchDriverBriefInfoForm();
             infoForm.setDriverId(driverId);
             r = this.drServiceApi.searchDriverBriefInfo(infoForm);
-
             HashMap temp = (HashMap) r.get("result");
             map.putAll(temp);
+
             int status = MapUtil.getInt(map, "status");
+
+            // TODO status是6状态，要额外查询最佳代金券
+            if (status == 6) {
+                SearchBestUnUseVoucherForm voucherForm = new SearchBestUnUseVoucherForm();
+                voucherForm.setCustomerId(form.getCustomerId());
+                BigDecimal total = new BigDecimal(MapUtil.getStr(map, "total"));
+                voucherForm.setAmount(total);
+                r = this.vhrServiceApi.searchBestUnUseVoucher(voucherForm);
+                temp = (HashMap) r.get("result");
+                map.put("voucher", temp);
+            }
+
             HashMap cmtMap = new HashMap();
             if (status >= 7) {
                 SearchCommentByOrderIdForm commentForm = new SearchCommentByOrderIdForm();

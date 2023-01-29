@@ -2,10 +2,7 @@ package com.aomsir.hxds.bff.customer.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
-import com.aomsir.hxds.bff.customer.controller.form.SearchUnTakeVoucherByPageForm;
-import com.aomsir.hxds.bff.customer.controller.form.SearchUnUseVoucherByPageForm;
-import com.aomsir.hxds.bff.customer.controller.form.SearchUnUseVoucherCountForm;
-import com.aomsir.hxds.bff.customer.controller.form.SearchUsedVoucherByPageForm;
+import com.aomsir.hxds.bff.customer.controller.form.*;
 import com.aomsir.hxds.bff.customer.service.VoucherService;
 import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
@@ -67,6 +64,17 @@ public class VoucherController {
         long customerId = StpUtil.getLoginIdAsLong();
         form.setCustomerId(customerId);
         long result = this.voucherService.searchUnUseVoucherCount(form);
+        return R.ok()
+                .put("result", result);
+    }
+
+    @PostMapping("/takeVoucher")
+    @SaCheckLogin
+    @Operation(summary = "查询未领取代金券的分页记录")
+    public R takeVoucher(@RequestBody @Valid TakeVoucherForm form) {
+        long customerId = StpUtil.getLoginIdAsLong();
+        form.setCustomerId(customerId);
+        boolean result = this.voucherService.takeVoucher(form);
         return R.ok()
                 .put("result", result);
     }

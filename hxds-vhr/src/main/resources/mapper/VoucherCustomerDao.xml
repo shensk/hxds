@@ -38,4 +38,12 @@
     </update>
 
 
+    <select id="searcherTakeVoucherNum" parameterType="Map" resultType="long">
+        SELECT COUNT(id)
+        FROM tb_voucher_customer
+        WHERE voucher_id = #{voucherId}
+          AND customer_id = #{customerId}
+    </select>
+
+
 </mapper>

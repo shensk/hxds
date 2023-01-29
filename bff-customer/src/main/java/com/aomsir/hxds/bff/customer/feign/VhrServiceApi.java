@@ -22,4 +22,10 @@ public interface VhrServiceApi {
 
     @PostMapping("/voucher/searchUnUseVoucherCount")
     public R searchUnUseVoucherCount(SearchUnUseVoucherCountForm form);
+
+    @PostMapping("/voucher/takeVoucher")
+    public R takeVoucher(TakeVoucherForm form);
+
+    @PostMapping("/voucher/searchBestUnUseVoucher")
+    public R searchBestUnUseVoucher(SearchBestUnUseVoucherForm form);
 }
