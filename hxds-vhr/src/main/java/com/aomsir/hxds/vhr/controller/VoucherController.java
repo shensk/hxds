@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
+import com.aomsir.hxds.vhr.controller.form.DeleteVoucherByIdsForm;
 import com.aomsir.hxds.vhr.controller.form.InsertVoucherForm;
 import com.aomsir.hxds.vhr.controller.form.SearchVoucherByPageForm;
 import com.aomsir.hxds.vhr.controller.form.UpdateVoucherStatusForm;
@@ -56,6 +57,14 @@ public class VoucherController {
     public R updateVoucherStatus(@RequestBody @Valid UpdateVoucherStatusForm form) {
         Map param = BeanUtil.beanToMap(form);
         int rows = this.voucherService.updateVoucherStatus(param);
+        return R.ok()
+                .put("rows", rows);
+    }
+
+    @PostMapping("/deleteVoucherByIds")
+    @Operation(summary = "删除代金券")
+    public R deleteVoucherByIds(@RequestBody @Valid DeleteVoucherByIdsForm form) {
+        int rows = this.voucherService.deleteVoucherByIds(form.getIds());
         return R.ok()
                 .put("rows", rows);
     }

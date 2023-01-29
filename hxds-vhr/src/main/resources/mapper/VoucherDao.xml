@@ -182,6 +182,28 @@
     </update>
 
 
+    <!--查询代金券领取数量-->
+    <select id="searchVoucherTakeCount" resultType="HashMap">
+        SELECT id,
+        uuid,
+        total_quota AS totalQuota,
+        take_count AS takeCount
+        FROM tb_voucher
+        WHERE id IN
+        <foreach collection="array" open="(" separator="," close=")" item="one">
+            #{one}
+        </foreach>
+    </select>
+
+    <!--根据id删除代金券-->
+    <delete id="deleteVoucherByIds">
+        DELETE FROM tb_voucher
+        WHERE id IN
+        <foreach collection="array" open="(" separator="," close=")" item="one">
+            #{one}
+        </foreach>
+    </delete>
+
 
 
 

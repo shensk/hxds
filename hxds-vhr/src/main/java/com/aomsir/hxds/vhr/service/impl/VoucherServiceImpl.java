@@ -106,4 +106,46 @@ public class VoucherServiceImpl implements VoucherService {
             this.redisTemplate.expire("voucher_" + uuid, duration);
         }
     }
+
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int deleteVoucherByIds(Long[] ids) {
+        ArrayList<HashMap> list = this.voucherDao.searchVoucherTakeCount(ids);
+        ArrayList<Long> temp = new ArrayList();
+        list.forEach(one -> {
+            long id = MapUtil.getLong(one, "id");
+            String uuid = MapUtil.getStr(one, "uuid");
+            long totalQuota = MapUtil.getLong(one, "totalQuota");
+            long takeCount = MapUtil.getLong(one, "takeCount");
+            if (takeCount == 0) {
+                //查询Redis中的缓存记录
+                if (this.redisTemplate.hasKey("voucher_" + uuid)) {
+                    long num = Long.parseLong(redisTemplate.opsForValue().get("voucher_" + uuid).toString());
+                    //没有人领取代金券
+                    if (num == totalQuota) {
+                        temp.add(id);
+                        //删除Redis缓存
+                        this.redisTemplate.delete("voucher_" + uuid);
+                        this.redisTemplate.delete("voucher_info_" + uuid);
+                    } else {
+                        log.debug("主键是" + id + "的代金券不能被删除");
+                    }
+                } else {
+                    temp.add(id);
+                }
+            } else {
+                //该记录不能删除
+                log.debug("主键是" + id + "的代金券不能被删除");
+            }
+        });
+        if (temp.size() > 0) {
+            ids = temp.toArray(new Long[temp.size()]);
+            int rows = this.voucherDao.deleteVoucherByIds(ids);
+            return rows;
+        }
+        return 0;
+
+    }
 }

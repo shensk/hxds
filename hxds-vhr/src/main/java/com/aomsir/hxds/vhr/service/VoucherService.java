@@ -11,4 +11,6 @@ public interface VoucherService {
     public int insert(VoucherEntity entity);
 
     public int updateVoucherStatus(Map param);
+
+    public int deleteVoucherByIds(Long[] ids);
 }

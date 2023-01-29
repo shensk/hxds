@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
+import com.aomsir.hxds.mis.api.controller.form.DeleteVoucherByIdsForm;
 import com.aomsir.hxds.mis.api.controller.form.InsertVoucherForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchVoucherByPageForm;
 import com.aomsir.hxds.mis.api.controller.form.UpdateVoucherStatusForm;
@@ -43,6 +44,15 @@ public class VoucherServiceImpl implements VoucherService {
     @LcnTransaction
     public int updateVoucherStatus(UpdateVoucherStatusForm form) {
         R r = this.vhrServiceApi.updateVoucherStatus(form);
+        int rows = MapUtil.getInt(r, "rows");
+        return rows;
+    }
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int deleteVoucherByIds(DeleteVoucherByIdsForm form) {
+        R r = this.vhrServiceApi.deleteVoucherByIds(form);
         int rows = MapUtil.getInt(r, "rows");
         return rows;
     }
