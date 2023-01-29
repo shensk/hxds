@@ -104,4 +104,13 @@ public class VoucherController {
         return R.ok()
                 .put("result", pageUtils);
     }
+
+    @PostMapping("/searchUnUseVoucherCount")
+    @Operation(summary = "查询未使用代金券数量")
+    public R searchUnUseVoucherCount(@RequestBody @Valid SearchUnUseVoucherCountForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        long count = this.voucherService.searchUnUseVoucherCount(param);
+        return R.ok()
+                .put("result", count);
+    }
 }

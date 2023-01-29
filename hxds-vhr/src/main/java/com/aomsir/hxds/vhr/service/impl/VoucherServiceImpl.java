@@ -194,4 +194,10 @@ public class VoucherServiceImpl implements VoucherService {
         return pageUtils;
     }
 
+    @Override
+    public long searchUnUseVoucherCount(Map param) {
+        long count = this.voucherDao.searchUnUseVoucherCount(param);
+        return count;
+    }
+
 }

@@ -19,4 +19,6 @@ public interface VoucherService {
     public PageUtils searchUnUseVoucherByPage(Map param);
 
     public PageUtils searchUsedVoucherByPage(Map param);
+
+    public long searchUnUseVoucherCount(Map param);
 }

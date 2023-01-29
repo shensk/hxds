@@ -1,9 +1,6 @@
 package com.aomsir.hxds.bff.customer.feign;
 
-import com.aomsir.hxds.bff.customer.controller.form.SearchUnTakeVoucherByPageForm;
-import com.aomsir.hxds.bff.customer.controller.form.SearchUnUseVoucherByPageForm;
-import com.aomsir.hxds.bff.customer.controller.form.SearchUsedVoucherByPageForm;
-import com.aomsir.hxds.bff.customer.controller.form.UseVoucherForm;
+import com.aomsir.hxds.bff.customer.controller.form.*;
 import com.aomsir.hxds.common.util.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,4 +19,7 @@ public interface VhrServiceApi {
 
     @PostMapping("/voucher/searchUsedVoucherByPage")
     public R searchUsedVoucherByPage(SearchUsedVoucherByPageForm form);
+
+    @PostMapping("/voucher/searchUnUseVoucherCount")
+    public R searchUnUseVoucherCount(SearchUnUseVoucherCountForm form);
 }

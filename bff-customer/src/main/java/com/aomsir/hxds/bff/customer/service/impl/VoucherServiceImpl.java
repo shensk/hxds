@@ -1,8 +1,10 @@
 package com.aomsir.hxds.bff.customer.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.map.MapUtil;
 import com.aomsir.hxds.bff.customer.controller.form.SearchUnTakeVoucherByPageForm;
 import com.aomsir.hxds.bff.customer.controller.form.SearchUnUseVoucherByPageForm;
+import com.aomsir.hxds.bff.customer.controller.form.SearchUnUseVoucherCountForm;
 import com.aomsir.hxds.bff.customer.controller.form.SearchUsedVoucherByPageForm;
 import com.aomsir.hxds.bff.customer.feign.VhrServiceApi;
 import com.aomsir.hxds.bff.customer.service.VoucherService;
@@ -40,6 +42,14 @@ public class VoucherServiceImpl implements VoucherService {
         HashMap map = (HashMap) r.get("result");
         PageUtils pageUtils = BeanUtil.toBean(map, PageUtils.class);
         return pageUtils;
+    }
+
+
+    @Override
+    public long searchUnUseVoucherCount(SearchUnUseVoucherCountForm form) {
+        R r = this.vhrServiceApi.searchUnUseVoucherCount(form);
+        long result = MapUtil.getLong(r, "result");
+        return result;
     }
     
 }

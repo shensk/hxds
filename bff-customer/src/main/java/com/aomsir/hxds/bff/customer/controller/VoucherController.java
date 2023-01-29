@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import com.aomsir.hxds.bff.customer.controller.form.SearchUnTakeVoucherByPageForm;
 import com.aomsir.hxds.bff.customer.controller.form.SearchUnUseVoucherByPageForm;
+import com.aomsir.hxds.bff.customer.controller.form.SearchUnUseVoucherCountForm;
 import com.aomsir.hxds.bff.customer.controller.form.SearchUsedVoucherByPageForm;
 import com.aomsir.hxds.bff.customer.service.VoucherService;
 import com.aomsir.hxds.common.util.PageUtils;
@@ -57,5 +58,16 @@ public class VoucherController {
         PageUtils pageUtils = this.voucherService.searchUsedVoucherByPage(form);
         return R.ok()
                 .put("result", pageUtils);
+    }
+
+    @PostMapping("/searchUnUseVoucherCount")
+    @SaCheckLogin
+    @Operation(summary = "查询未使用代金券数量")
+    public R searchUnUseVoucherCount(@RequestBody @Valid SearchUnUseVoucherCountForm form) {
+        long customerId = StpUtil.getLoginIdAsLong();
+        form.setCustomerId(customerId);
+        long result = this.voucherService.searchUnUseVoucherCount(form);
+        return R.ok()
+                .put("result", result);
     }
 }
