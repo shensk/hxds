@@ -1,10 +1,7 @@
 package com.aomsir.hxds.mis.api.feign;
 
 import com.aomsir.hxds.common.util.R;
-import com.aomsir.hxds.mis.api.controller.form.DeleteVoucherByIdsForm;
-import com.aomsir.hxds.mis.api.controller.form.InsertVoucherForm;
-import com.aomsir.hxds.mis.api.controller.form.SearchVoucherByPageForm;
-import com.aomsir.hxds.mis.api.controller.form.UpdateVoucherStatusForm;
+import com.aomsir.hxds.mis.api.controller.form.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 

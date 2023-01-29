@@ -4,10 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
-import com.aomsir.hxds.vhr.controller.form.DeleteVoucherByIdsForm;
-import com.aomsir.hxds.vhr.controller.form.InsertVoucherForm;
-import com.aomsir.hxds.vhr.controller.form.SearchVoucherByPageForm;
-import com.aomsir.hxds.vhr.controller.form.UpdateVoucherStatusForm;
+import com.aomsir.hxds.vhr.controller.form.*;
 import com.aomsir.hxds.vhr.db.pojo.VoucherEntity;
 import com.aomsir.hxds.vhr.service.VoucherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,5 +64,44 @@ public class VoucherController {
         int rows = this.voucherService.deleteVoucherByIds(form.getIds());
         return R.ok()
                 .put("rows", rows);
+    }
+
+    @PostMapping("/searchUnTakeVoucherByPage")
+    @Operation(summary = "查询未领取代金券的分页")
+    public R searchUnTakeVoucherByPage(@RequestBody @Valid SearchUnTakeVoucherByPageForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int page = form.getPage();
+        int length = form.getLength();
+        int start = (page - 1) * length;
+        param.put("start", start);
+        PageUtils pageUtils = this.voucherService.searchUnTakeVoucherByPage(param);
+        return R.ok()
+                .put("result", pageUtils);
+    }
+
+    @PostMapping("/searchUnUseVoucherByPage")
+    @Operation(summary = "查询未使用代金券的分页")
+    public R searchUnUseVoucherByPage(@RequestBody @Valid SearchUnUseVoucherByPageForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int page = form.getPage();
+        int length = form.getLength();
+        int start = (page - 1) * length;
+        param.put("start", start);
+        PageUtils pageUtils = this.voucherService.searchUnUseVoucherByPage(param);
+        return R.ok()
+                .put("result", pageUtils);
+    }
+
+    @PostMapping("/searchUsedVoucherByPage")
+    @Operation(summary = "查询已使用代金券的分页")
+    public R searchUsedVoucherByPage(@RequestBody @Valid SearchUsedVoucherByPageForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int page = form.getPage();
+        int length = form.getLength();
+        int start = (page - 1) * length;
+        param.put("start", start);
+        PageUtils pageUtils = this.voucherService.searchUsedVoucherByPage(param);
+        return R.ok()
+                .put("result", pageUtils);
     }
 }
