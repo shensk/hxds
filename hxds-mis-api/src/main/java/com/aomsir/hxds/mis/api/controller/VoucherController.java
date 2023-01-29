@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
 import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
+import com.aomsir.hxds.mis.api.controller.form.InsertVoucherForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchVoucherByPageForm;
 import com.aomsir.hxds.mis.api.service.VoucherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,5 +31,15 @@ public class VoucherController {
         PageUtils pageUtils = voucherService.searchVoucherByPage(form);
         return R.ok()
                 .put("result", pageUtils);
+    }
+
+    @PostMapping("/insertVoucher")
+    @SaCheckPermission(value = {"ROOT", "VOUCHER:INSERT"}, mode = SaMode.OR)
+    @Operation(summary = "添加代金券")
+    public R insertVoucher(@RequestBody @Valid InsertVoucherForm form) {
+        form.setStatus((byte) 3);
+        int rows = this.voucherService.insertVoucher(form);
+        return R.ok()
+                .put("rows", rows);
     }
 }
