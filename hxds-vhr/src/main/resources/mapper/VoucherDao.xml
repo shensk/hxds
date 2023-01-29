@@ -152,6 +152,37 @@
     </select>
 
 
+    <!--根据id查询代金券-->
+    <select id="searchVoucherById" parameterType="long" resultType="HashMap">
+        SELECT uuid,
+               `name`,
+               remark,
+               tag,
+               total_quota                         AS totalQuota,
+               take_count                          AS takeCount,
+               used_count                          AS usedCount,
+               discount,
+               with_amount                         AS withAmount,
+               `type`,
+               limit_quota                         AS limitQuota,
+               time_type                           AS timeType,
+               days,
+               DATE_FORMAT(start_time, '%Y-%m-%d') AS startTime,
+               DATE_FORMAT(end_time, '%Y-%m-%d')   AS endTime,
+               `status`
+        FROM tb_voucher
+        WHERE id = #{id}
+    </select>
+
+    <!--更新代金券状态-上/下线-->
+    <update id="updateVoucherStatus" parameterType="Map">
+        UPDATE tb_voucher
+        SET `status`=#{status}
+        WHERE id = #{id}
+    </update>
+
+
+
 
 
 </mapper>

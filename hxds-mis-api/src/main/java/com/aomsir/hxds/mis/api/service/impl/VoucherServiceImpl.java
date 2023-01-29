@@ -6,6 +6,7 @@ import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.mis.api.controller.form.InsertVoucherForm;
 import com.aomsir.hxds.mis.api.controller.form.SearchVoucherByPageForm;
+import com.aomsir.hxds.mis.api.controller.form.UpdateVoucherStatusForm;
 import com.aomsir.hxds.mis.api.feign.VhrServiceApi;
 import com.aomsir.hxds.mis.api.service.VoucherService;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
@@ -33,6 +34,15 @@ public class VoucherServiceImpl implements VoucherService {
     @LcnTransaction
     public int insertVoucher(InsertVoucherForm form) {
         R r = this.vhrServiceApi.insertVoucher(form);
+        int rows = MapUtil.getInt(r, "rows");
+        return rows;
+    }
+
+    @Override
+    @Transactional
+    @LcnTransaction
+    public int updateVoucherStatus(UpdateVoucherStatusForm form) {
+        R r = this.vhrServiceApi.updateVoucherStatus(form);
         int rows = MapUtil.getInt(r, "rows");
         return rows;
     }

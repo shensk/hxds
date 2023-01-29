@@ -6,6 +6,7 @@ import com.aomsir.hxds.common.util.PageUtils;
 import com.aomsir.hxds.common.util.R;
 import com.aomsir.hxds.vhr.controller.form.InsertVoucherForm;
 import com.aomsir.hxds.vhr.controller.form.SearchVoucherByPageForm;
+import com.aomsir.hxds.vhr.controller.form.UpdateVoucherStatusForm;
 import com.aomsir.hxds.vhr.db.pojo.VoucherEntity;
 import com.aomsir.hxds.vhr.service.VoucherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,6 +47,15 @@ public class VoucherController {
         String uuid = IdUtil.simpleUUID();
         entity.setUuid(uuid);
         int rows = this.voucherService.insert(entity);
+        return R.ok()
+                .put("rows", rows);
+    }
+
+    @PostMapping("/updateVoucherStatus")
+    @Operation(summary = "更改代金券状态")
+    public R updateVoucherStatus(@RequestBody @Valid UpdateVoucherStatusForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int rows = this.voucherService.updateVoucherStatus(param);
         return R.ok()
                 .put("rows", rows);
     }

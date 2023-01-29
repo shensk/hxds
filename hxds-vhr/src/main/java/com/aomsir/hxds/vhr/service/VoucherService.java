@@ -9,4 +9,6 @@ public interface VoucherService {
     public PageUtils searchVoucherByPage(Map param);
 
     public int insert(VoucherEntity entity);
+
+    public int updateVoucherStatus(Map param);
 }
