@@ -20,11 +20,14 @@ public interface OrderService {
 
     public HashMap searchOrderById(SearchOrderByIdForm form);
 
-    public HashMap createWxPayment(long orderId, long customerId, Long voucherId);
+
 
     public String updateOrderAboutPayment(UpdateOrderAboutPaymentForm form);
 
     public PageUtils searchCustomerOrderByPage(SearchCustomerOrderByPageForm form);
+
+    public HashMap createWxPayment(long orderId, long customerId,
+                                   Long customerVoucherId,Long voucherId);
 
 }
 

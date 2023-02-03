@@ -268,7 +268,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     @LcnTransaction
-    public HashMap createWxPayment(long orderId, long customerId, Long voucherId) {
+    public HashMap createWxPayment(long orderId, long customerId,
+                                   Long customerVoucherId,Long voucherId) {
         /*
          * 1.先查询订单是否为6状态，其他状态都不可以生成支付订单
          */
@@ -281,12 +282,10 @@ public class OrderServiceImpl implements OrderService {
         String uuid = MapUtil.getStr(map, "uuid");
         long driverId = MapUtil.getLong(map, "driverId");
         String discount = "0.00";
-        if (voucherId != null) {
-            /*
-             * 2.查询代金券是否可以使用，并绑定
-             */
+        if (customerVoucherId != null && voucherId != null) {
             UseVoucherForm form_2 = new UseVoucherForm();
             form_2.setCustomerId(customerId);
+            form_2.setId(customerVoucherId);
             form_2.setVoucherId(voucherId);
             form_2.setOrderId(orderId);
             form_2.setAmount(amount);

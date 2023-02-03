@@ -334,5 +334,12 @@
         LIMIT 1
     </select>
 
+    <!--更新代金券已使用数量-->
+    <update id="updateUsedCount" parameterType="long">
+        UPDATE tb_voucher
+        SET used_count = used_count + 1
+        WHERE id = #{id}
+    </update>
+
 
 </mapper>
